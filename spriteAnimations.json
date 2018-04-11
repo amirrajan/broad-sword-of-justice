@@ -1,0 +1,83 @@
+{
+    "imageName": "MegaMan1.png",
+    "states": {
+        "right": [
+            {
+                "frameDelay": 111,
+                "spriteWidth": 28,
+                "spriteHeight": 30,
+                "marginLeft": 15,
+                "marginTop": 68
+            },
+            {
+                "frameDelay": 111,
+                "spriteWidth": 28,
+                "spriteHeight": 30,
+                "marginLeft": 43,
+                "marginTop": 68
+            },
+            {
+                "frameDelay": 111,
+                "spriteWidth": 28,
+                "spriteHeight": 30,
+                "marginLeft": 71,
+                "marginTop": 68
+            }
+        ],
+        "left": [
+            {
+                "frameDelay": 111,
+                "spriteWidth": 33,
+                "spriteHeight": 30,
+                "marginLeft": 130,
+                "marginTop": 68
+            },
+            {
+                "frameDelay": 111,
+                "spriteWidth": 33,
+                "spriteHeight": 30,
+                "marginLeft": 163,
+                "marginTop": 68
+            },
+            {
+                "frameDelay": 111,
+                "spriteWidth": 33,
+                "spriteHeight": 30,
+                "marginLeft": 196,
+                "marginTop": 68
+            }
+        ],
+        "standRight": [
+            {
+                "frameDelay": 500,
+                "spriteWidth": 30,
+                "spriteHeight": 30,
+                "marginLeft": 15,
+                "marginTop": 40
+            },
+            {
+                "frameDelay": 500,
+                "spriteWidth": 30,
+                "spriteHeight": 30,
+                "marginLeft": 45,
+                "marginTop": 40
+            }
+        ],
+        "standLeft": [
+            {
+                "frameDelay": 2000,
+                "spriteWidth": 28,
+                "spriteHeight": 30,
+                "marginLeft": 170,
+                "marginTop": 40
+            },
+            {
+                "frameDelay": 500,
+                "spriteWidth": 28,
+                "spriteHeight": 30,
+                "marginLeft": 198,
+                "marginTop": 40
+            }
+        ]
+    }
+}
