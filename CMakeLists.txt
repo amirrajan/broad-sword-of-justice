@@ -6,9 +6,7 @@ set(SOURCES main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 configure_file(PTS75F.ttf PTS75F.ttf COPYONLY)
-configure_file(spriteAnimations.json spriteAnimations.json COPYONLY)
-configure_file(sprite.png sprite.png COPYONLY)
-configure_file(MegaMan1.png MegaMan1.png COPYONLY)
+configure_file(player_idle.png COPYONLY)
 
 INCLUDE(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)

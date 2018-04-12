@@ -5,54 +5,31 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+// Headless representation of the game.
 typedef struct {
   int floor;
   int player_x;
   int player_y;
 } Game;
 
+// Headless representation of a point.
 typedef struct {
   int x;
   int y;
 } Point;
 
-std::string * read_file(std::string fileName)
+// Headless representation of keys that can be pressed.
+enum Key { LEFT = 0, RIGHT, ESC, NUMBER_OF_KEYS };
+
+// Helper method to create a texture from a file.
+SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * surface, std::string file_name)
 {
-  FILE * file = fopen(fileName.c_str(), "rb");
-  char * buffer;
-
-  fseek(file, 0L, SEEK_END);
-  long size = ftell(file);
-
-  rewind(file);
-
-  buffer = (char*) calloc(1, size+1);
-  fread(buffer, size, 1, file);
-
-  fclose(file);
-
-  return new std::string(buffer);
-}
-
-SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, std::string file_name) {
-  SDL_Surface * surface = IMG_Load(file_name.c_str());
+  surface = IMG_Load(file_name.c_str());
   SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0x00, 0x40, 0x80) );
   return SDL_CreateTextureFromSurface(renderer, surface);
 }
 
-SDL_Texture * create_texture(SDL_Renderer * renderer, SDL_Rect * srcrect, SDL_Rect * desrect)
-{
-  SDL_Texture * texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, srcrect->w, srcrect->h);
-
-  SDL_SetRenderTarget(renderer, texture);
-  SDL_RenderCopy(renderer, texture, srcrect, NULL);
-  SDL_RenderPresent(renderer);
-  SDL_SetRenderTarget(renderer, NULL);
-
-  return texture;
-}
-
-
+// Helper method to take a sprite, and render it onto the scene at a specific location.
 void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y)
 {
   SDL_Rect destrect;
@@ -70,17 +47,31 @@ void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y
   SDL_RenderCopy(renderer, texture, &cliprect, &destrect);
 }
 
+// Helper method to take a sprite, and render it onto the scene at a specific point.
 void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, Point point)
 {
   render_texture(renderer, texture, point.x, point.y);
 }
 
+// Initialization of the game.
 void game_new(Game *game) {
   game->floor = 0;
   game->player_x = 0;
   game->player_y = 0;
 }
 
+// Game logic to move a player left.
+void game_move_player_left(Game *game) {
+  game->player_x = game->player_x - 1;
+}
+
+// Game logic to move a player right.
+void game_move_player_right(Game *game) {
+  game->player_x = game->player_x + 1;
+}
+
+// This converts a point from game coordinates to canvas coordinates.
+// The current resolution of the game is 1024x768 with sprites sized at 128 pixels.
 Point location_in_camera(int x, int y)
 {
   Point result;
@@ -89,31 +80,68 @@ Point location_in_camera(int x, int y)
   return result;
 }
 
-int main(int argc, char *argv[])
+// This takes in the current inputs by SDL and maps them to methods to call within the game.
+void game_process_inputs(SDL_Event event, bool *keymap, Game *game)
 {
-  SDL_Window * window;
-  SDL_Renderer * renderer;
-  TTF_Font * font;
+  if (!SDL_PollEvent(&event)) { return; }
 
-  SDL_Init(SDL_INIT_VIDEO);
-  window = SDL_CreateWindow("Game", 50, 50, 1024, 768, SDL_WINDOW_OPENGL);
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  TTF_Init();
-  font = TTF_OpenFont("PTS75F.ttf", 12);
+  int type = event.type;
 
-  SDL_Texture * texture = create_texture_from_file(renderer, "player_idle.png");
-  bool quit = false;
+  if (type != SDL_KEYDOWN && type != SDL_KEYUP) { return; }
 
-  int floor = 768 - 128 - 30;
+  int keySym = event.key.keysym.sym;
+  bool keyDown = type == SDL_KEYDOWN;
 
-  Game *game = (Game *)malloc(sizeof(Game));
+  if (keySym == 'a') { keymap[LEFT] = keyDown; }
+  else if (keySym == 'd') { keymap[RIGHT] = keyDown; }
+  else if (keySym == SDLK_ESCAPE) { keymap[ESC] = keyDown; }
 
-  game_new(game);
+  if (keymap[LEFT]) { game_move_player_left(game); }
+  else if (keymap[RIGHT]) { game_move_player_right(game); }
+}
 
+// This takes a game and renders it on the screen.
+void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, Game *game)
+{
   SDL_RenderSetScale(renderer, 1, 1);
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
-  render_texture(renderer, texture, location_in_camera(game->player_x, game->player_y));
+  render_texture(renderer, player_idle_textue, location_in_camera(game->player_x, game->player_y));
   SDL_RenderPresent(renderer);
-  getchar();
+}
+
+// This will contain code to control the game.
+void game_tick(Game *game)
+{
+
+}
+
+// Entry point into the application.
+int main(int argc, char *argv[])
+{
+  // Initialize all the things.
+  SDL_Init(SDL_INIT_VIDEO);
+  TTF_Init();
+
+  SDL_Window * window = SDL_CreateWindow("Game", 50, 50, 1024, 768, SDL_WINDOW_OPENGL);
+  SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  TTF_Font * font = TTF_OpenFont("PTS75F.ttf", 12);
+  SDL_Surface * surface = (SDL_Surface *)malloc(sizeof(SDL_Surface));
+  SDL_Texture * texture = create_texture_from_file(renderer, surface, "player_idle.png");
+  SDL_Event event;
+
+  bool keymap[NUMBER_OF_KEYS];
+  keymap[LEFT] = false;
+  keymap[RIGHT] = false;
+  keymap[ESC] = false;
+
+  Game *game = (Game *)malloc(sizeof(Game));
+  game_new(game);
+
+  // Game loop.
+  while (keymap[ESC] == false) {
+    game_tick(game);
+    game_process_inputs(event, keymap, game);
+    game_draw(renderer, texture, game);
+  }
 }
