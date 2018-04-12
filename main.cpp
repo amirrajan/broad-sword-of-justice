@@ -5,6 +5,17 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
+typedef struct {
+  int floor;
+  int player_x;
+  int player_y;
+} Game;
+
+typedef struct {
+  int x;
+  int y;
+} Point;
+
 std::string * read_file(std::string fileName)
 {
   FILE * file = fopen(fileName.c_str(), "rb");
@@ -41,26 +52,41 @@ SDL_Texture * create_texture(SDL_Renderer * renderer, SDL_Rect * srcrect, SDL_Re
   return texture;
 }
 
+
 void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y)
 {
   SDL_Rect destrect;
   destrect.x = x;
   destrect.y = y;
-  destrect.w = 797 / 10.0;
-  destrect.h = 528 / 5.0;
+  destrect.w = 128;
+  destrect.h = 128;
 
   SDL_Rect cliprect;
-  cliprect.x = x;
-  cliprect.y = y;
-  cliprect.w = 797 / 16.0;
-  cliprect.h = 528 / 8.0;
+  cliprect.x = 0;
+  cliprect.y = 0;
+  cliprect.w = 128;
+  cliprect.h = 128;
 
   SDL_RenderCopy(renderer, texture, &cliprect, &destrect);
 }
 
-void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, SDL_Rect * srcrect, SDL_Rect * destrect)
+void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, Point point)
 {
-  SDL_RenderCopy(renderer, texture, srcrect, destrect);
+  render_texture(renderer, texture, point.x, point.y);
+}
+
+void game_new(Game *game) {
+  game->floor = 0;
+  game->player_x = 0;
+  game->player_y = 0;
+}
+
+Point location_in_camera(int x, int y)
+{
+  Point result;
+  result.x = x;
+  result.y = 768 - 128 - y;
+  return result;
 }
 
 int main(int argc, char *argv[])
@@ -75,13 +101,19 @@ int main(int argc, char *argv[])
   TTF_Init();
   font = TTF_OpenFont("PTS75F.ttf", 12);
 
-  SDL_Texture * texture = create_texture_from_file(renderer, "MegaMan1.png");
+  SDL_Texture * texture = create_texture_from_file(renderer, "player_idle.png");
   bool quit = false;
+
+  int floor = 768 - 128 - 30;
+
+  Game *game = (Game *)malloc(sizeof(Game));
+
+  game_new(game);
 
   SDL_RenderSetScale(renderer, 1, 1);
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
-  render_texture(renderer, texture, 0, 0);
+  render_texture(renderer, texture, location_in_camera(game->player_x, game->player_y));
   SDL_RenderPresent(renderer);
   getchar();
 }

@@ -48,10 +48,10 @@ RM = /usr/local/Cellar/cmake/3.10.3/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/amiralirajan/projects/sdl-2d-game
+CMAKE_SOURCE_DIR = /Users/amiralirajan/projects/broad-sword-of-justice
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/amiralirajan/projects/sdl-2d-game
+CMAKE_BINARY_DIR = /Users/amiralirajan/projects/broad-sword-of-justice
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amiralirajan/projects/sdl-2d-game/CMakeFiles /Users/amiralirajan/projects/sdl-2d-game/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amiralirajan/projects/broad-sword-of-justice/CMakeFiles /Users/amiralirajan/projects/broad-sword-of-justice/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amiralirajan/projects/sdl-2d-game/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/amiralirajan/projects/broad-sword-of-justice/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,287 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named sdl-2d-game
+# Target rules for targets named broad-sword-of-justice
 
 # Build rule for target.
-sdl-2d-game: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 sdl-2d-game
-.PHONY : sdl-2d-game
+broad-sword-of-justice: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 broad-sword-of-justice
+.PHONY : broad-sword-of-justice
 
 # fast build rule for target.
-sdl-2d-game/fast:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/build
-.PHONY : sdl-2d-game/fast
-
-AnimatedSprite.o: AnimatedSprite.cpp.o
-
-.PHONY : AnimatedSprite.o
-
-# target to build an object file
-AnimatedSprite.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/AnimatedSprite.cpp.o
-.PHONY : AnimatedSprite.cpp.o
-
-AnimatedSprite.i: AnimatedSprite.cpp.i
-
-.PHONY : AnimatedSprite.i
-
-# target to preprocess a source file
-AnimatedSprite.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/AnimatedSprite.cpp.i
-.PHONY : AnimatedSprite.cpp.i
-
-AnimatedSprite.s: AnimatedSprite.cpp.s
-
-.PHONY : AnimatedSprite.s
-
-# target to generate assembly for a file
-AnimatedSprite.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/AnimatedSprite.cpp.s
-.PHONY : AnimatedSprite.cpp.s
-
-FPS.o: FPS.cpp.o
-
-.PHONY : FPS.o
-
-# target to build an object file
-FPS.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/FPS.cpp.o
-.PHONY : FPS.cpp.o
-
-FPS.i: FPS.cpp.i
-
-.PHONY : FPS.i
-
-# target to preprocess a source file
-FPS.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/FPS.cpp.i
-.PHONY : FPS.cpp.i
-
-FPS.s: FPS.cpp.s
-
-.PHONY : FPS.s
-
-# target to generate assembly for a file
-FPS.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/FPS.cpp.s
-.PHONY : FPS.cpp.s
-
-Game.o: Game.cpp.o
-
-.PHONY : Game.o
-
-# target to build an object file
-Game.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Game.cpp.o
-.PHONY : Game.cpp.o
-
-Game.i: Game.cpp.i
-
-.PHONY : Game.i
-
-# target to preprocess a source file
-Game.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Game.cpp.i
-.PHONY : Game.cpp.i
-
-Game.s: Game.cpp.s
-
-.PHONY : Game.s
-
-# target to generate assembly for a file
-Game.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Game.cpp.s
-.PHONY : Game.cpp.s
-
-Input.o: Input.cpp.o
-
-.PHONY : Input.o
-
-# target to build an object file
-Input.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Input.cpp.o
-.PHONY : Input.cpp.o
-
-Input.i: Input.cpp.i
-
-.PHONY : Input.i
-
-# target to preprocess a source file
-Input.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Input.cpp.i
-.PHONY : Input.cpp.i
-
-Input.s: Input.cpp.s
-
-.PHONY : Input.s
-
-# target to generate assembly for a file
-Input.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Input.cpp.s
-.PHONY : Input.cpp.s
-
-OS.o: OS.cpp.o
-
-.PHONY : OS.o
-
-# target to build an object file
-OS.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/OS.cpp.o
-.PHONY : OS.cpp.o
-
-OS.i: OS.cpp.i
-
-.PHONY : OS.i
-
-# target to preprocess a source file
-OS.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/OS.cpp.i
-.PHONY : OS.cpp.i
-
-OS.s: OS.cpp.s
-
-.PHONY : OS.s
-
-# target to generate assembly for a file
-OS.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/OS.cpp.s
-.PHONY : OS.cpp.s
-
-Player.o: Player.cpp.o
-
-.PHONY : Player.o
-
-# target to build an object file
-Player.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Player.cpp.o
-.PHONY : Player.cpp.o
-
-Player.i: Player.cpp.i
-
-.PHONY : Player.i
-
-# target to preprocess a source file
-Player.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Player.cpp.i
-.PHONY : Player.cpp.i
-
-Player.s: Player.cpp.s
-
-.PHONY : Player.s
-
-# target to generate assembly for a file
-Player.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Player.cpp.s
-.PHONY : Player.cpp.s
-
-Renderer.o: Renderer.cpp.o
-
-.PHONY : Renderer.o
-
-# target to build an object file
-Renderer.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Renderer.cpp.o
-.PHONY : Renderer.cpp.o
-
-Renderer.i: Renderer.cpp.i
-
-.PHONY : Renderer.i
-
-# target to preprocess a source file
-Renderer.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Renderer.cpp.i
-.PHONY : Renderer.cpp.i
-
-Renderer.s: Renderer.cpp.s
-
-.PHONY : Renderer.s
-
-# target to generate assembly for a file
-Renderer.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Renderer.cpp.s
-.PHONY : Renderer.cpp.s
-
-Sprite.o: Sprite.cpp.o
-
-.PHONY : Sprite.o
-
-# target to build an object file
-Sprite.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Sprite.cpp.o
-.PHONY : Sprite.cpp.o
-
-Sprite.i: Sprite.cpp.i
-
-.PHONY : Sprite.i
-
-# target to preprocess a source file
-Sprite.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Sprite.cpp.i
-.PHONY : Sprite.cpp.i
-
-Sprite.s: Sprite.cpp.s
-
-.PHONY : Sprite.s
-
-# target to generate assembly for a file
-Sprite.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Sprite.cpp.s
-.PHONY : Sprite.cpp.s
-
-Utils.o: Utils.cpp.o
-
-.PHONY : Utils.o
-
-# target to build an object file
-Utils.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Utils.cpp.o
-.PHONY : Utils.cpp.o
-
-Utils.i: Utils.cpp.i
-
-.PHONY : Utils.i
-
-# target to preprocess a source file
-Utils.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Utils.cpp.i
-.PHONY : Utils.cpp.i
-
-Utils.s: Utils.cpp.s
-
-.PHONY : Utils.s
-
-# target to generate assembly for a file
-Utils.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/Utils.cpp.s
-.PHONY : Utils.cpp.s
-
-json-parser/json.o: json-parser/json.c.o
-
-.PHONY : json-parser/json.o
-
-# target to build an object file
-json-parser/json.c.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/json-parser/json.c.o
-.PHONY : json-parser/json.c.o
-
-json-parser/json.i: json-parser/json.c.i
-
-.PHONY : json-parser/json.i
-
-# target to preprocess a source file
-json-parser/json.c.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/json-parser/json.c.i
-.PHONY : json-parser/json.c.i
-
-json-parser/json.s: json-parser/json.c.s
-
-.PHONY : json-parser/json.s
-
-# target to generate assembly for a file
-json-parser/json.c.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/json-parser/json.c.s
-.PHONY : json-parser/json.c.s
+broad-sword-of-justice/fast:
+	$(MAKE) -f CMakeFiles/broad-sword-of-justice.dir/build.make CMakeFiles/broad-sword-of-justice.dir/build
+.PHONY : broad-sword-of-justice/fast
 
 main.o: main.cpp.o
 
@@ -399,7 +129,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/broad-sword-of-justice.dir/build.make CMakeFiles/broad-sword-of-justice.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -408,7 +138,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/broad-sword-of-justice.dir/build.make CMakeFiles/broad-sword-of-justice.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -417,7 +147,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/sdl-2d-game.dir/build.make CMakeFiles/sdl-2d-game.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/broad-sword-of-justice.dir/build.make CMakeFiles/broad-sword-of-justice.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -428,37 +158,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... sdl-2d-game"
-	@echo "... AnimatedSprite.o"
-	@echo "... AnimatedSprite.i"
-	@echo "... AnimatedSprite.s"
-	@echo "... FPS.o"
-	@echo "... FPS.i"
-	@echo "... FPS.s"
-	@echo "... Game.o"
-	@echo "... Game.i"
-	@echo "... Game.s"
-	@echo "... Input.o"
-	@echo "... Input.i"
-	@echo "... Input.s"
-	@echo "... OS.o"
-	@echo "... OS.i"
-	@echo "... OS.s"
-	@echo "... Player.o"
-	@echo "... Player.i"
-	@echo "... Player.s"
-	@echo "... Renderer.o"
-	@echo "... Renderer.i"
-	@echo "... Renderer.s"
-	@echo "... Sprite.o"
-	@echo "... Sprite.i"
-	@echo "... Sprite.s"
-	@echo "... Utils.o"
-	@echo "... Utils.i"
-	@echo "... Utils.s"
-	@echo "... json-parser/json.o"
-	@echo "... json-parser/json.i"
-	@echo "... json-parser/json.s"
+	@echo "... broad-sword-of-justice"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

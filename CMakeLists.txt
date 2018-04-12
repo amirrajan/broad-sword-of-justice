@@ -2,19 +2,7 @@ project(broad-sword-of-justice)
 
 cmake_minimum_required(VERSION 2.8)
 
-set(SOURCES
-AnimatedSprite.cpp
-FPS.cpp
-Game.cpp
-Input.cpp
-main.cpp
-OS.cpp
-Player.cpp
-Renderer.cpp
-Sprite.cpp
-Utils.cpp
-json-parser/json.c
-)
+set(SOURCES main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 configure_file(PTS75F.ttf PTS75F.ttf COPYONLY)
