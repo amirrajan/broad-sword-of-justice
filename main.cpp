@@ -10,6 +10,8 @@ typedef struct {
   int floor;
   int player_x;
   int player_y;
+  double lateral_momentum;
+  double max_lateral_momentum;
 } Game;
 
 // Headless representation of a point.
@@ -58,16 +60,24 @@ void game_new(Game *game) {
   game->floor = 0;
   game->player_x = 0;
   game->player_y = 0;
+  game->lateral_momentum = 0;
+  game->max_lateral_momentum = 20;
 }
 
 // Game logic to move a player left.
 void game_move_player_left(Game *game) {
-  game->player_x = game->player_x - 1;
+  game->lateral_momentum -= 1.0;
+  if(game->lateral_momentum < game->max_lateral_momentum * -1) {
+    game->lateral_momentum = game->max_lateral_momentum * -1;
+  }
 }
 
 // Game logic to move a player right.
 void game_move_player_right(Game *game) {
-  game->player_x = game->player_x + 1;
+  game->lateral_momentum += 1.0;
+  if(game->lateral_momentum > game->max_lateral_momentum) {
+    game->lateral_momentum = game->max_lateral_momentum;
+  }
 }
 
 // This converts a point from game coordinates to canvas coordinates.
@@ -92,8 +102,8 @@ void game_process_inputs(SDL_Event event, bool *keymap, Game *game)
   int keySym = event.key.keysym.sym;
   bool keyDown = type == SDL_KEYDOWN;
 
-  if (keySym == 'a') { keymap[LEFT] = keyDown; }
-  else if (keySym == 'd') { keymap[RIGHT] = keyDown; }
+  if (keySym == SDLK_LEFT) { keymap[LEFT] = keyDown; }
+  else if (keySym == SDLK_RIGHT) { keymap[RIGHT] = keyDown; }
   else if (keySym == SDLK_ESCAPE) { keymap[ESC] = keyDown; }
 
   if (keymap[LEFT]) { game_move_player_left(game); }
@@ -113,7 +123,8 @@ void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, Game *ga
 // This will contain code to control the game.
 void game_tick(Game *game)
 {
-
+  game->player_x += (int)game->lateral_momentum;
+  game->lateral_momentum = game->lateral_momentum * 0.95;
 }
 
 // Entry point into the application.
@@ -143,5 +154,9 @@ int main(int argc, char *argv[])
     game_tick(game);
     game_process_inputs(event, keymap, game);
     game_draw(renderer, texture, game);
+    SDL_Delay(1000. / 60.);
+    if ((int)game->lateral_momentum != 0) {
+      SDL_Log("%f", game->lateral_momentum);
+    }
   }
 }
