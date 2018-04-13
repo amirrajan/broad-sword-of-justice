@@ -82,8 +82,8 @@ int main(int argc, char *argv[])
     game_process_inputs(event, game);
     game_draw(renderer, player_idle, game);
     SDL_Delay(1000. / 60.);
-    if ((int)game->horizontal_momentum != 0) {
-      SDL_Log("%f", game->horizontal_momentum);
+    if ((int)game->horizontal_velocity != 0) {
+      SDL_Log("%f", game->horizontal_velocity);
     }
   }
 

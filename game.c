@@ -4,10 +4,14 @@ typedef struct {
   double floor;
   double player_x;
   double player_y;
-  double horizontal_momentum;
-  double vertical_momentum;
+  double horizontal_velocity;
+  double vertical_velocity;
+  double jump_power;
+  double max_jump_hold_frames;
   double gravity;
-  double max_horizontal_momentum;
+  double max_horizontal_speed;
+  double horizontal_acceleration;
+  double friction;
   int jump_hold_frames;
   bool keys_up;
   bool keys_down;
@@ -34,15 +38,32 @@ double sign(double value)
 
 // Initialization of the game.
 void game_new(Game *game) {
+  // frames per second.
   game->timestep = 1000. / 60.;
+  // where the floor is located.
   game->floor = 0;
+  // current position of player.
   game->player_x = 0;
   game->player_y = 0;
-  game->horizontal_momentum = 0;
-  game->vertical_momentum = 0;
-  game->gravity = 1;
-  game->max_horizontal_momentum = 20;
+  // how quickly the player is moving horizontally (negative value means left, positive value means right).
+  game->horizontal_velocity = 0;
+  // how quickly the player is moving vertically (the floor is at 0, a negative value here means they are above the floor).
+  game->vertical_velocity = 0;
+  // the initial power of the jump.
+  game->jump_power = 10;
+  // how many frames that initial jump power is sustained before gravity takes over.
+  game->max_jump_hold_frames = 18;
+  // gravity.
+  game->gravity = 10;
+  // how quickly the player will stop moving horizontally.
+  game->friction = 1.5;
+  // top speed of player.
+  game->max_horizontal_speed = 20;
+  // how quickly the player increases to their top speed.
+  game->horizontal_acceleration = 1.8;
+  // this represents the number of frames that jump has been held for (relates to max_jump_hold_frames).
   game->jump_hold_frames = 0;
+  // keys that are currently being held down.
   game->keys_up = false;
   game->keys_down = false;
   game->keys_left = false;
@@ -56,18 +77,18 @@ void game_new(Game *game) {
 // Game logic to move a player left.
 void game_move_player_left(Game *game)
 {
-  game->horizontal_momentum -= 1.8;
-  if(game->horizontal_momentum < game->max_horizontal_momentum * -1) {
-    game->horizontal_momentum = game->max_horizontal_momentum * -1;
+  game->horizontal_velocity -= game->horizontal_acceleration;
+  if(game->horizontal_velocity < game->max_horizontal_speed * -1) {
+    game->horizontal_velocity = game->max_horizontal_speed * -1;
   }
 }
 
 // Game logic to move a player right.
 void game_move_player_right(Game *game)
 {
-  game->horizontal_momentum += 1.8;
-  if(game->horizontal_momentum > game->max_horizontal_momentum) {
-    game->horizontal_momentum = game->max_horizontal_momentum;
+  game->horizontal_velocity += game->horizontal_acceleration;
+  if(game->horizontal_velocity > game->max_horizontal_speed) {
+    game->horizontal_velocity = game->max_horizontal_speed;
   }
 }
 
@@ -76,8 +97,8 @@ void game_player_jump(Game *game)
 {
   // only jump on the ground
   if (game->player_y <= game->floor) {
-    game->vertical_momentum = 10;
-    game->jump_hold_frames = 18;
+    game->vertical_velocity = game->jump_power;
+    game->jump_hold_frames = game->max_jump_hold_frames;
   }
 }
 
@@ -123,29 +144,29 @@ void game_tick(Game *game)
   if (game->keys_right) { game_move_player_right(game); }
   if (game->keys_a) { game_player_jump(game); }
 
-  // momentum
-  game->player_x += game->horizontal_momentum;
-  game->player_y += game->vertical_momentum;
+  // velocity
+  game->player_x += game->horizontal_velocity;
+  game->player_y += game->vertical_velocity;
 
   // friction (even in air)
   if ((!game->keys_left && !game->keys_right) || (game->keys_left && game->keys_right)) {
-    game->horizontal_momentum -= 1.5 * sign(game->horizontal_momentum);
-    if (abs(game->horizontal_momentum) < 2) game->horizontal_momentum = 0;
+    game->horizontal_velocity -= game->friction * sign(game->horizontal_velocity);
+    if (abs(game->horizontal_velocity) < 2) game->horizontal_velocity = 0;
   }
 
   // keep holding A for higher jump
   if (game->keys_a && game->jump_hold_frames > 0) {
     game->jump_hold_frames--;
-    game->vertical_momentum = 10;
+    game->vertical_velocity = game->jump_power;
   } else {
     game->jump_hold_frames = 0;
   }
 
   // stop at floor
   if (game->player_y > game->floor) {
-    game->vertical_momentum -= 10. / game->timestep;
+    game->vertical_velocity -= game->gravity / game->timestep;
   } else {
-    game->vertical_momentum = 0;
+    game->vertical_velocity = 0;
     game->player_y = game->floor;
   }
 }
