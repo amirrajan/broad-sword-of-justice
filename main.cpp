@@ -11,12 +11,13 @@
 // Headless representation of the game.
 typedef struct {
   double timestep;
-  int floor;
-  int player_x;
-  int player_y;
-  double lateral_momentum;
-  double max_lateral_momentum;
+  double floor;
+  double player_x;
+  double player_y;
+  double horizontal_momentum;
   double vertical_momentum;
+  double gravity;
+  double max_horizontal_momentum;
   int jump_hold_frames;
 } Game;
 
@@ -73,32 +74,36 @@ void game_new(Game *game) {
   game->floor = 0;
   game->player_x = 0;
   game->player_y = 0;
-  game->lateral_momentum = 0;
-  game->max_lateral_momentum = 8;
+  game->horizontal_momentum = 0;
+  game->vertical_momentum = 0;
+  game->gravity = 1;
+  game->max_horizontal_momentum = 20;
   game->jump_hold_frames = 0;
 }
 
 // Game logic to move a player left.
-void game_move_player_left(Game *game) {
-  game->lateral_momentum -= 1.8;
-  if(game->lateral_momentum < game->max_lateral_momentum * -1) {
-    game->lateral_momentum = game->max_lateral_momentum * -1;
+void game_move_player_left(Game *game)
+{
+  game->horizontal_momentum -= 1.8;
+  if(game->horizontal_momentum < game->max_horizontal_momentum * -1) {
+    game->horizontal_momentum = game->max_horizontal_momentum * -1;
   }
 }
 
 // Game logic to move a player right.
-void game_move_player_right(Game *game) {
-  game->lateral_momentum += 1.8;
-  if(game->lateral_momentum > game->max_lateral_momentum) {
-    game->lateral_momentum = game->max_lateral_momentum;
+void game_move_player_right(Game *game)
+{
+  game->horizontal_momentum += 1.8;
+  if(game->horizontal_momentum > game->max_horizontal_momentum) {
+    game->horizontal_momentum = game->max_horizontal_momentum;
   }
 }
 
 // Game logic for player jump.
-void game_player_jump(Game *game) {
-	// only jump on the ground
-  if (game->player_y <= game->floor)
-  {
+void game_player_jump(Game *game)
+{
+  // only jump on the ground
+  if (game->player_y <= game->floor) {
     game->vertical_momentum = 10;
     game->jump_hold_frames = 18;
   }
@@ -118,8 +123,7 @@ Point location_in_camera(int x, int y)
 void game_process_inputs(SDL_Event event, bool *keymap, Game *game)
 {
   // poll for all events
-  while (SDL_PollEvent(&event))
-  {
+  while (SDL_PollEvent(&event)) {
     int type = event.type;
 
     // we will need to handle other types of events (e.g. window closing) here later
@@ -147,8 +151,6 @@ void game_process_inputs(SDL_Event event, bool *keymap, Game *game)
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, Game *game)
 {
-  SDL_RenderSetScale(renderer, 1, 1);
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
   render_texture(renderer, player_idle_textue, location_in_camera(game->player_x, game->player_y));
   SDL_RenderPresent(renderer);
@@ -158,36 +160,28 @@ void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, Game *ga
 void game_tick(Game *game, bool *keymap)
 {
   // momentum
-  game->player_x += game->lateral_momentum;
+  game->player_x += game->horizontal_momentum;
   game->player_y += game->vertical_momentum;
 
   // friction (even in air)
-  if ((!keymap[LEFT] && !keymap[RIGHT]) ||
-      (keymap[LEFT] && keymap[RIGHT]))
-  {
-    game->lateral_momentum -= 1.5 * sign(game->lateral_momentum);
-    if (abs(game->lateral_momentum) < 2)
-      game->lateral_momentum = 0;
+  if ((!keymap[LEFT] && !keymap[RIGHT]) || (keymap[LEFT] && keymap[RIGHT])) {
+    game->horizontal_momentum -= 1.5 * sign(game->horizontal_momentum);
+    if (abs(game->horizontal_momentum) < 2)
+      game->horizontal_momentum = 0;
   }
 
   // keep holding A for higher jump
-  if (keymap[A] && game->jump_hold_frames > 0)
-  {
+  if (keymap[A] && game->jump_hold_frames > 0) {
     game->jump_hold_frames--;
     game->vertical_momentum = 10;
-  }
-  else
-  {
+  } else {
     game->jump_hold_frames = 0;
   }
 
   // stop at floor
-  if (game->player_y > game->floor)
-  {
+  if (game->player_y > game->floor) {
     game->vertical_momentum -= 10. / game->timestep;
-  }
-  else
-  {
+  } else {
     game->vertical_momentum = 0;
     game->player_y = game->floor;
   }
@@ -197,10 +191,10 @@ void game_tick(Game *game, bool *keymap)
 #ifndef _WINDOWS
 int main(int argc, char *argv[])
 #else
-int WINAPI WinMain(HINSTANCE hinstance,
-	HINSTANCE hprevinstance,
-	LPSTR lpcmdline,
-	int ncmdshow)
+  int WINAPI WinMain(HINSTANCE hinstance,
+		     HINSTANCE hprevinstance,
+		     LPSTR lpcmdline,
+		     int ncmdshow)
 #endif
 {
   // Initialize all the things.
@@ -227,14 +221,17 @@ int WINAPI WinMain(HINSTANCE hinstance,
   Game *game = (Game *)malloc(sizeof(Game));
   game_new(game);
 
+  SDL_RenderSetScale(renderer, 1, 1);
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
   // Game loop.
   while (keymap[ESC] == false) {
     game_tick(game, keymap);
     game_process_inputs(event, keymap, game);
     game_draw(renderer, texture, game);
     SDL_Delay(1000. / 60.);
-    if ((int)game->lateral_momentum != 0) {
-      SDL_Log("%f", game->lateral_momentum);
+    if ((int)game->horizontal_momentum != 0) {
+      SDL_Log("%f", game->horizontal_momentum);
     }
   }
 
