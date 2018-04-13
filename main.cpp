@@ -19,6 +19,14 @@ typedef struct {
   double gravity;
   double max_horizontal_momentum;
   int jump_hold_frames;
+  bool keys_up;
+  bool keys_down;
+  bool keys_left;
+  bool keys_right;
+  bool keys_a;
+  bool keys_b;
+  bool keys_c;
+  bool keys_q;
 } Game;
 
 // Headless representation of a point.
@@ -26,9 +34,6 @@ typedef struct {
   int x;
   int y;
 } Point;
-
-// Headless representation of keys that can be pressed.
-enum Key { LEFT = 0, RIGHT, UP, DOWN, A, B, C, ESC, NUMBER_OF_KEYS };
 
 // Helper method to create a texture from a file.
 SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * surface, std::string file_name)
@@ -79,6 +84,14 @@ void game_new(Game *game) {
   game->gravity = 1;
   game->max_horizontal_momentum = 20;
   game->jump_hold_frames = 0;
+  game->keys_up = false;
+  game->keys_down = false;
+  game->keys_left = false;
+  game->keys_right = false;
+  game->keys_a = false;
+  game->keys_b = false;
+  game->keys_c = false;
+  game->keys_q = false;
 }
 
 // Game logic to move a player left.
@@ -120,7 +133,7 @@ Point location_in_camera(int x, int y)
 }
 
 // This takes in the current inputs by SDL and maps them to methods to call within the game.
-void game_process_inputs(SDL_Event event, bool *keymap, Game *game)
+void game_process_inputs(SDL_Event event, Game *game)
 {
   // poll for all events
   while (SDL_PollEvent(&event)) {
@@ -132,20 +145,15 @@ void game_process_inputs(SDL_Event event, bool *keymap, Game *game)
     int keySym = event.key.keysym.sym;
     bool keyDown = type == SDL_KEYDOWN;
 
-    if (keySym == SDLK_UP) { keymap[UP] = keyDown; }
-    else if (keySym == SDLK_DOWN) { keymap[DOWN] = keyDown; }
-    else if (keySym == SDLK_LEFT) { keymap[LEFT] = keyDown; }
-    else if (keySym == SDLK_RIGHT) { keymap[RIGHT] = keyDown; }
-    else if (keySym == SDLK_a) { keymap[A] = keyDown; }
-    else if (keySym == SDLK_s) { keymap[B] = keyDown; }
-    else if (keySym == SDLK_d) { keymap[C] = keyDown; }
-    else if (keySym == SDLK_ESCAPE) { keymap[ESC] = keyDown; }
+    if (keySym == SDLK_UP) { game->keys_up = keyDown; }
+    else if (keySym == SDLK_DOWN) { game->keys_down = keyDown; }
+    else if (keySym == SDLK_LEFT) { game->keys_left = keyDown; }
+    else if (keySym == SDLK_RIGHT) { game->keys_right = keyDown; }
+    else if (keySym == SDLK_a) { game->keys_a = keyDown; }
+    else if (keySym == SDLK_s) { game->keys_b = keyDown; }
+    else if (keySym == SDLK_d) { game->keys_c = keyDown; }
+    else if (keySym == SDLK_q) { game->keys_q = keyDown; }
   }
-
-  // execute current inputs
-  if (keymap[LEFT]) { game_move_player_left(game); }
-  if (keymap[RIGHT]) { game_move_player_right(game); }
-  if (keymap[A]) { game_player_jump(game); }
 }
 
 // This takes a game and renders it on the screen.
@@ -157,21 +165,25 @@ void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, Game *ga
 }
 
 // This will contain code to control the game.
-void game_tick(Game *game, bool *keymap)
+void game_tick(Game *game)
 {
+  // execute current inputs
+  if (game->keys_left) { game_move_player_left(game); }
+  if (game->keys_right) { game_move_player_right(game); }
+  if (game->keys_a) { game_player_jump(game); }
+
   // momentum
   game->player_x += game->horizontal_momentum;
   game->player_y += game->vertical_momentum;
 
   // friction (even in air)
-  if ((!keymap[LEFT] && !keymap[RIGHT]) || (keymap[LEFT] && keymap[RIGHT])) {
+  if ((!game->keys_left && !game->keys_right) || (game->keys_left && game->keys_right)) {
     game->horizontal_momentum -= 1.5 * sign(game->horizontal_momentum);
-    if (abs(game->horizontal_momentum) < 2)
-      game->horizontal_momentum = 0;
+    if (abs(game->horizontal_momentum) < 2) game->horizontal_momentum = 0;
   }
 
   // keep holding A for higher jump
-  if (keymap[A] && game->jump_hold_frames > 0) {
+  if (game->keys_a && game->jump_hold_frames > 0) {
     game->jump_hold_frames--;
     game->vertical_momentum = 10;
   } else {
@@ -208,16 +220,6 @@ int main(int argc, char *argv[])
   SDL_Texture * texture = create_texture_from_file(renderer, surface, "player_idle.png");
   SDL_Event event;
 
-  bool keymap[NUMBER_OF_KEYS];
-  keymap[UP] = false;
-  keymap[DOWN] = false;
-  keymap[LEFT] = false;
-  keymap[RIGHT] = false;
-  keymap[A] = false;
-  keymap[B] = false;
-  keymap[C] = false;
-  keymap[ESC] = false;
-
   Game *game = (Game *)malloc(sizeof(Game));
   game_new(game);
 
@@ -225,9 +227,9 @@ int main(int argc, char *argv[])
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
   // Game loop.
-  while (keymap[ESC] == false) {
-    game_tick(game, keymap);
-    game_process_inputs(event, keymap, game);
+  while (game->keys_q == false) {
+    game_tick(game);
+    game_process_inputs(event, game);
     game_draw(renderer, texture, game);
     SDL_Delay(1000. / 60.);
     if ((int)game->horizontal_momentum != 0) {
