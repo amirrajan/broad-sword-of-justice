@@ -1,3 +1,5 @@
+#include <chipmunk.h>
+
 #define SPRITE_SIZE  128
 #define WORLD_HEIGHT 768
 #define WORLD_WIDTH  1024
@@ -31,13 +33,13 @@ typedef struct {
   bool keys_q;
   double left_edge;
   double right_edge;
-} Game;
+} BSJ_Game;
 
 // Headless representation of a point.
 typedef struct {
   int x;
   int y;
-} Point;
+} BSJ_Point;
 
 
 // Helper (put in utility file?) to quickly get the sign.
@@ -47,7 +49,7 @@ double sign(double value)
 }
 
 // Initialization of the game.
-void game_new(Game *game) {
+void game_new(BSJ_Game *game) {
   // frames per second.
   game->timestep = 1000. / 60.;
   // where the floor is located.
@@ -91,7 +93,7 @@ void game_new(Game *game) {
 }
 
 // Game logic to move a player left.
-void game_move_player_left(Game *game)
+void game_move_player_left(BSJ_Game *game)
 {
   game->horizontal_velocity -= game->horizontal_acceleration;
   game->player_facing = -1;
@@ -101,7 +103,7 @@ void game_move_player_left(Game *game)
 }
 
 // Game logic to move a player right.
-void game_move_player_right(Game *game)
+void game_move_player_right(BSJ_Game *game)
 {
   game->horizontal_velocity += game->horizontal_acceleration;
   game->player_facing = 1;
@@ -111,7 +113,7 @@ void game_move_player_right(Game *game)
 }
 
 // Game logic for player jump.
-void game_player_jump(Game *game)
+void game_player_jump(BSJ_Game *game)
 {
   // only jump on the ground
   if (game->player_y <= game->floor) {
@@ -122,16 +124,16 @@ void game_player_jump(Game *game)
 
 // This converts a point from game coordinates to canvas coordinates.
 // The current resolution of the game is 1024x768 with sprites sized at 128 pixels.
-Point location_in_camera(int x, int y)
+BSJ_Point location_in_camera(int x, int y)
 {
-  Point result;
+  BSJ_Point result;
   result.x = x;
   result.y = WORLD_HEIGHT - SPRITE_SIZE - y;
   return result;
 }
 
 // This takes in the current inputs by SDL and maps them to methods to call within the game.
-void game_process_inputs(SDL_Event event, Game *game)
+void game_process_inputs(SDL_Event event, BSJ_Game *game)
 {
   // poll for all events
   while (SDL_PollEvent(&event)) {
@@ -155,7 +157,7 @@ void game_process_inputs(SDL_Event event, Game *game)
 }
 
 // This will contain code to control the game.
-void game_tick(Game *game)
+void game_tick(BSJ_Game *game)
 {
   // execute current inputs
   if (game->keys_left) { game_move_player_left(game); }
