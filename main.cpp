@@ -42,10 +42,11 @@ void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, Point point)
 }
 
 // This takes a game and renders it on the screen.
-void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, Game *game)
+void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, SDL_Texture *boss_idle_textue, Game *game)
 {
   SDL_RenderClear(renderer);
   render_texture(renderer, player_idle_textue, location_in_camera(game->player_x, game->player_y));
+  render_texture(renderer, boss_idle_textue, location_in_camera(game->boss_x, game->boss_y));
   SDL_RenderPresent(renderer);
 }
 
@@ -68,6 +69,7 @@ int main(int argc, char *argv[])
   TTF_Font * font = TTF_OpenFont("PTS75F.ttf", 12);
   SDL_Surface * surface = (SDL_Surface *)malloc(sizeof(SDL_Surface));
   SDL_Texture * player_idle = create_texture_from_file(renderer, surface, "player_idle.png");
+  SDL_Texture * boss_idle_texture = create_texture_from_file(renderer, surface, "boss_1_idle.png");
   SDL_Event event;
 
   Game *game = (Game *)malloc(sizeof(Game));
@@ -80,7 +82,7 @@ int main(int argc, char *argv[])
   while (game->keys_q == false) {
     game_tick(game);
     game_process_inputs(event, game);
-    game_draw(renderer, player_idle, game);
+    game_draw(renderer, player_idle, boss_idle_texture, game);
     SDL_Delay(1000. / 60.);
     if ((int)game->horizontal_velocity != 0) {
       SDL_Log("%f", game->horizontal_velocity);
