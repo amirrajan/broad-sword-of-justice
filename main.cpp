@@ -57,6 +57,7 @@ typedef struct {
 typedef struct {
   IntOfSDL_Texture ** texture_tuples;
   int current_index;
+  int count;
 } BSJ_Sprite;
 
 typedef struct {
@@ -72,6 +73,38 @@ typedef struct {
   TTF_Font * font;
   SDL_Event * event;
 } SDL_Context;
+
+BSJ_Sprite * game_new_bsj_sprite(SDL_Context * context, int number_of_textures, ...)
+{
+  MALLOC(BSJ_Sprite, sprite);
+  sprite->texture_tuples = MALLOCSA(IntOfSDL_Texture, number_of_textures);
+  sprite->current_index = 0;
+  sprite->count = number_of_textures;
+
+  for (int index = 0; index < number_of_textures; index++) {
+    sprite->texture_tuples[index] = MALLOCA(IntOfSDL_Texture);
+  }
+
+  va_list file_duration_pairs;
+  va_start(file_duration_pairs, (number_of_textures * 2));
+  int texture_index = 0;
+  for (int index = 0; index < (number_of_textures * 2); index++) {
+    if(index % 2 == 0) {
+      char * file_path = va_arg(file_duration_pairs, char *);
+      sprite->texture_tuples[texture_index]->texture =
+	create_texture_from_file(context->renderer,
+				 context->surface,
+				 file_path);
+    } else {
+      int duration = va_arg(file_duration_pairs, int);
+      sprite->texture_tuples[texture_index]->duration = duration;
+      texture_index++;
+    }
+  }
+  va_end(file_duration_pairs);
+
+  return sprite;
+}
 
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
@@ -142,6 +175,20 @@ int main(int argc, char *argv[])
 
   SDL_Context * context = game_new_sdl_context();
   MALLOC(BSJ_Sprites, sprites);
+
+  sprites->player_idle =
+    game_new_bsj_sprite(context, 1,
+			"player_idle.png", 1);
+
+  sprites->player_attack =
+    game_new_bsj_sprite(context, 4,
+			"player_attack1.png", 1,
+			"player_attack2.png", 1,
+			"player_attack3.png", 1,
+			"player_attack4.png", 1);
+
+  sprites->boss_idle =
+    game_new_bsj_sprite(context, 1, "boss_1_idle.png", 1);
 
 
   MALLOC(BSJ_Game, game);
