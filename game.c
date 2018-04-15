@@ -1,3 +1,7 @@
+#define SPRITE_SIZE  128
+#define WORLD_HEIGHT 768
+#define WORLD_WIDTH  1024
+
 // Headless representation of the game.
 typedef struct {
   double timestep;
@@ -23,6 +27,8 @@ typedef struct {
   bool keys_b;
   bool keys_c;
   bool keys_q;
+  double left_edge;
+  double right_edge;
 } Game;
 
 // Headless representation of a point.
@@ -76,6 +82,8 @@ void game_new(Game *game) {
   game->keys_b = false;
   game->keys_c = false;
   game->keys_q = false;
+  game->left_edge = 0;
+  game->right_edge = WORLD_WIDTH - SPRITE_SIZE;
 }
 
 // Game logic to move a player left.
@@ -112,7 +120,7 @@ Point location_in_camera(int x, int y)
 {
   Point result;
   result.x = x;
-  result.y = 768 - 128 - y;
+  result.y = WORLD_HEIGHT - SPRITE_SIZE - y;
   return result;
 }
 
@@ -151,6 +159,14 @@ void game_tick(Game *game)
   // velocity
   game->player_x += game->horizontal_velocity;
   game->player_y += game->vertical_velocity;
+
+  if (game->player_x < game->left_edge) {
+    game->player_x = game->left_edge;
+  }
+
+  if (game->player_x > game->right_edge) {
+    game->player_x = game->right_edge;
+  }
 
   // friction (even in air)
   if ((!game->keys_left && !game->keys_right) || (game->keys_left && game->keys_right)) {
