@@ -18,11 +18,11 @@ SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * su
 }
 
 // Helper method to take a sprite, and render it onto the scene at a specific location.
-void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y)
+void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, Point point, double angle, SDL_RendererFlip flip)
 {
   SDL_Rect destrect;
-  destrect.x = x;
-  destrect.y = y;
+  destrect.x = point.x;
+  destrect.y = point.y;
   destrect.w = 128;
   destrect.h = 128;
 
@@ -32,21 +32,23 @@ void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, int x, int y
   cliprect.w = 128;
   cliprect.h = 128;
 
-  SDL_RenderCopy(renderer, texture, &cliprect, &destrect);
-}
-
-// Helper method to take a sprite, and render it onto the scene at a specific point.
-void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, Point point)
-{
-  render_texture(renderer, texture, point.x, point.y);
+  SDL_RenderCopyEx(renderer, texture, &cliprect, &destrect, angle, NULL, flip);
 }
 
 // This takes a game and renders it on the screen.
-void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_textue, SDL_Texture *boss_idle_textue, Game *game)
+void game_draw(SDL_Renderer *renderer, SDL_Texture *player_idle_texture, SDL_Texture *boss_idle_textue, Game *game)
 {
   SDL_RenderClear(renderer);
-  render_texture(renderer, player_idle_textue, location_in_camera(game->player_x, game->player_y));
-  render_texture(renderer, boss_idle_textue, location_in_camera(game->boss_x, game->boss_y));
+  render_texture(renderer,
+		 player_idle_texture,
+		 location_in_camera(game->player_x, game->player_y),
+		 0,
+		 game->player_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+  render_texture(renderer,
+		 boss_idle_textue,
+		 location_in_camera(game->boss_x, game->boss_y),
+		 0,
+		 game->boss_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
   SDL_RenderPresent(renderer);
 }
 

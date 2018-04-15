@@ -8,8 +8,10 @@ typedef struct {
   double floor;
   double player_x;
   double player_y;
+  double player_facing;
   double boss_x;
   double boss_y;
+  double boss_facing;
   double horizontal_velocity;
   double vertical_velocity;
   double jump_power;
@@ -53,8 +55,10 @@ void game_new(Game *game) {
   // current position of player.
   game->player_x = 0;
   game->player_y = 0;
+  game->player_facing = 1;
   game->boss_x = 700;
   game->boss_y = 0;
+  game->boss_facing = -1;
   // how quickly the player is moving horizontally (negative value means left, positive value means right).
   game->horizontal_velocity = 0;
   // how quickly the player is moving vertically (the floor is at 0, a negative value here means they are above the floor).
@@ -90,6 +94,7 @@ void game_new(Game *game) {
 void game_move_player_left(Game *game)
 {
   game->horizontal_velocity -= game->horizontal_acceleration;
+  game->player_facing = -1;
   if(game->horizontal_velocity < game->max_horizontal_speed * -1) {
     game->horizontal_velocity = game->max_horizontal_speed * -1;
   }
@@ -99,6 +104,7 @@ void game_move_player_left(Game *game)
 void game_move_player_right(Game *game)
 {
   game->horizontal_velocity += game->horizontal_acceleration;
+  game->player_facing = 1;
   if(game->horizontal_velocity > game->max_horizontal_speed) {
     game->horizontal_velocity = game->max_horizontal_speed;
   }
