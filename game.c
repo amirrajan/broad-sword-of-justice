@@ -48,6 +48,22 @@ double sign(double value)
   return (value > 0) - (value < 0);
 }
 
+bool is_player_hit(BSJ_Game *game) {
+  cpBB player_box;
+  player_box.l = game->player_x;
+  player_box.r = game->player_x + SPRITE_SIZE / 2.0;
+  player_box.t = game->player_y;
+  player_box.b = game->player_y - SPRITE_SIZE / 2.0;
+
+  cpBB boss_box;
+  boss_box.l = game->boss_x;
+  boss_box.r = game->boss_x + SPRITE_SIZE / 2.0;
+  boss_box.t = game->boss_y;
+  boss_box.b = game->boss_y - SPRITE_SIZE / 2.0;
+
+  return (bool)cpBBIntersects(player_box, boss_box);
+}
+
 // Initialization of the game.
 void game_new(BSJ_Game *game) {
   // frames per second.
@@ -56,7 +72,7 @@ void game_new(BSJ_Game *game) {
   game->floor = 0;
   // current position of player.
   game->player_x = 0;
-  game->player_y = 0;
+  game->player_y = 800;
   game->player_facing = 1;
   game->boss_x = 700;
   game->boss_y = 0;
@@ -159,6 +175,11 @@ void game_process_inputs(SDL_Event event, BSJ_Game *game)
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game)
 {
+  if(is_player_hit(game)) {
+    game->player_x = 0;
+    game->player_y = 800;
+  }
+
   // execute current inputs
   if (game->keys_left) { game_move_player_left(game); }
   if (game->keys_right) { game_move_player_right(game); }

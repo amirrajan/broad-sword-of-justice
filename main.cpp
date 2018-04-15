@@ -90,9 +90,9 @@ int main(int argc, char *argv[])
     game_process_inputs(event, game);
     game_draw(renderer, player_idle, boss_idle_texture, game);
     SDL_Delay(1000. / 60.);
-    if ((int)game->horizontal_velocity != 0) {
-      SDL_Log("%f", game->horizontal_velocity);
-    }
+    // if ((int)game->horizontal_velocity != 0) {
+    //   SDL_Log("%f", game->horizontal_velocity);
+    // }
   }
 
   return 0;
