@@ -8,103 +8,10 @@
 #include <SDL_render.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include "malloc_macros.c"
 #include "game.c"
-
-// Helper method to create a texture from a file.
-SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * surface, std::string file_name)
-{
-  surface = IMG_Load(file_name.c_str());
-  SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 0x00, 0x40, 0x80) );
-  return SDL_CreateTextureFromSurface(renderer, surface);
-}
-
-// Helper method to take a sprite, and render it onto the scene at a specific location.
-void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, BSJ_Point point, double angle, SDL_RendererFlip flip)
-{
-  SDL_Rect destrect;
-  destrect.x = point.x;
-  destrect.y = point.y;
-  destrect.w = 128;
-  destrect.h = 128;
-
-  SDL_Rect cliprect;
-  cliprect.x = 0;
-  cliprect.y = 0;
-  cliprect.w = 128;
-  cliprect.h = 128;
-
-  SDL_Point center;
-  center.x = 0;
-  center.y = 0;
-
-  SDL_RenderCopyEx(renderer, texture, &cliprect, &destrect, angle, &center, flip);
-}
-
-// macro to define a malloc with a variable name
-#define MALLOC(type, variable_name) type * variable_name = (type *)malloc(sizeof(type))
-
-// macro to define a malloc for assignment
-#define MALLOCA(type) (type *)malloc(sizeof(type))
-
-#define MALLOCS(type, variable_name, count) type * variable_name = (type **)malloc(sizeof(type *) * count)
-#define MALLOCSA(type, count) (type **)malloc(sizeof(type *) * count)
-
-typedef struct {
-  int duration;
-  SDL_Texture *texture;
-} IntOfSDL_Texture;
-
-typedef struct {
-  IntOfSDL_Texture ** texture_tuples;
-  int current_index;
-  int count;
-} BSJ_Sprite;
-
-typedef struct {
-  BSJ_Sprite * player_idle;
-  BSJ_Sprite * player_attack;
-  BSJ_Sprite * boss_idle;
-} BSJ_Sprites;
-
-typedef struct {
-  SDL_Window * window;
-  SDL_Renderer * renderer;
-  SDL_Surface * surface;
-  TTF_Font * font;
-  SDL_Event * event;
-} SDL_Context;
-
-BSJ_Sprite * game_new_bsj_sprite(SDL_Context * context, int number_of_textures, ...)
-{
-  MALLOC(BSJ_Sprite, sprite);
-  sprite->texture_tuples = MALLOCSA(IntOfSDL_Texture, number_of_textures);
-  sprite->current_index = 0;
-  sprite->count = number_of_textures;
-
-  for (int index = 0; index < number_of_textures; index++) {
-    sprite->texture_tuples[index] = MALLOCA(IntOfSDL_Texture);
-  }
-
-  va_list file_duration_pairs;
-  va_start(file_duration_pairs, (number_of_textures * 2));
-  int texture_index = 0;
-  for (int index = 0; index < (number_of_textures * 2); index++) {
-    if(index % 2 == 0) {
-      char * file_path = va_arg(file_duration_pairs, char *);
-      sprite->texture_tuples[texture_index]->texture =
-	create_texture_from_file(context->renderer,
-				 context->surface,
-				 file_path);
-    } else {
-      int duration = va_arg(file_duration_pairs, int);
-      sprite->texture_tuples[texture_index]->duration = duration;
-      texture_index++;
-    }
-  }
-  va_end(file_duration_pairs);
-
-  return sprite;
-}
+#include "sdl_helpers.c"
+#include "sprite.c"
 
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
@@ -121,17 +28,6 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   		 0,
   		 game->boss_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
   SDL_RenderPresent(context->renderer);
-}
-
-SDL_Context * game_new_sdl_context()
-{
-  MALLOC(SDL_Context, o);
-  o->window = SDL_CreateWindow("Game", 50, 50, 1024, 768, SDL_WINDOW_OPENGL);
-  o->renderer = SDL_CreateRenderer(o->window, -1, SDL_RENDERER_ACCELERATED);
-  o->surface = MALLOCA(SDL_Surface);
-  o->font = TTF_OpenFont("PTS75F.ttf", 12);
-  o->event = MALLOCA(SDL_Event);
-  return o;
 }
 
 // This takes in the current inputs by SDL and maps them to methods to call within the game.
@@ -158,7 +54,6 @@ void game_process_inputs(SDL_Event * event, BSJ_Game *game)
   }
 }
 
-
 // Entry point into the application.
 #ifndef _WINDOWS
 int main(int argc, char *argv[])
@@ -174,22 +69,7 @@ int main(int argc, char *argv[])
   TTF_Init();
 
   SDL_Context * context = game_new_sdl_context();
-  MALLOC(BSJ_Sprites, sprites);
-
-  sprites->player_idle =
-    game_new_bsj_sprite(context, 1,
-			"player_idle.png", 1);
-
-  sprites->player_attack =
-    game_new_bsj_sprite(context, 4,
-			"player_attack1.png", 1,
-			"player_attack2.png", 1,
-			"player_attack3.png", 1,
-			"player_attack4.png", 1);
-
-  sprites->boss_idle =
-    game_new_bsj_sprite(context, 1, "boss_1_idle.png", 1);
-
+  BSJ_Sprites * sprites = game_init_sprites(context);
 
   MALLOC(BSJ_Game, game);
   game_new(game);
@@ -203,9 +83,6 @@ int main(int argc, char *argv[])
     game_process_inputs(context->event, game);
     game_draw(context, sprites, game);
     SDL_Delay(1000. / 60.);
-    // if ((int)game->horizontal_velocity != 0) {
-    //   SDL_Log("%f", game->horizontal_velocity);
-    // }
   }
 
   return 0;
