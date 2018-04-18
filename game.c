@@ -113,7 +113,7 @@ void game_new(BSJ_Game *game) {
   // attack frame definitions
   game->is_player_attacking = false;
   // number of frames the attack lasts
-  game->max_player_attack_frames = 3;
+  game->max_player_attack_frames = 18;
   // current attack frame (when this hit's the max, the player is no longer attacking)
   game->current_player_attack_frames = 0;
 }
@@ -165,6 +165,40 @@ BSJ_Point location_in_camera(int x, int y)
   return result;
 }
 
+void game_tick_horizontal_velocity(BSJ_Game *game) {
+  game->player_x += game->horizontal_velocity;
+  game->player_y += game->vertical_velocity;
+
+  if ((!game->keys_left && !game->keys_right) || (game->keys_left && game->keys_right)) {
+    game->horizontal_velocity -= game->friction * sign(game->horizontal_velocity);
+    if (abs(game->horizontal_velocity) < 2) game->horizontal_velocity = 0;
+  }
+}
+
+void game_tick_edge_collision(BSJ_Game *game)
+{
+  if (game->player_x < game->left_edge) { game->player_x = game->left_edge; }
+  if (game->player_x > game->right_edge) { game->player_x = game->right_edge; }
+}
+
+void game_tick_attack_inputs(BSJ_Game *game)
+{
+  if (game->is_player_attacking) { game->current_player_attack_frames -= 1; }
+
+  if (game->current_player_attack_frames <= 0) {
+    game->current_player_attack_frames = 0;
+    game->is_player_attacking = false;
+  }
+}
+
+void game_tick_move_inputs(BSJ_Game *game)
+{
+  if (game->keys_left) { game_move_player_left(game); }
+  if (game->keys_right) { game_move_player_right(game); }
+  if (game->keys_a) { game_player_jump(game); }
+  if (game->keys_b) { game_player_attempt_attack(game); }
+}
+
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game)
 {
@@ -173,38 +207,10 @@ void game_tick(BSJ_Game *game)
     game->player_y = 800;
   }
 
-  // process attack
-  if (game->is_player_attacking) { game->current_player_attack_frames -= 1; }
-
-  if (game->current_player_attack_frames <= 0) {
-    game->current_player_attack_frames = 0;
-    game->is_player_attacking = false;
-  }
-
-  // execute current inputs
-  if (game->keys_left) { game_move_player_left(game); }
-  if (game->keys_right) { game_move_player_right(game); }
-  if (game->keys_a) { game_player_jump(game); }
-  if (game->keys_b) { game_player_attempt_attack(game); }
-
-  // velocity
-  game->player_x += game->horizontal_velocity;
-  game->player_y += game->vertical_velocity;
-
-  // edge collision
-  if (game->player_x < game->left_edge) {
-    game->player_x = game->left_edge;
-  }
-
-  if (game->player_x > game->right_edge) {
-    game->player_x = game->right_edge;
-  }
-
-  // friction (even in air)
-  if ((!game->keys_left && !game->keys_right) || (game->keys_left && game->keys_right)) {
-    game->horizontal_velocity -= game->friction * sign(game->horizontal_velocity);
-    if (abs(game->horizontal_velocity) < 2) game->horizontal_velocity = 0;
-  }
+  game_tick_attack_inputs(game);
+  game_tick_move_inputs(game);
+  game_tick_edge_collision(game);
+  game_tick_horizontal_velocity(game);
 
   // keep holding A for higher jump
   if (game->keys_a && game->jump_hold_frames > 0) {
