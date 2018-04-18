@@ -18,11 +18,19 @@
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   SDL_RenderClear(context->renderer);
-  render_texture(context->renderer,
-  		 sprites->player_idle->texture_tuples[0]->texture,
-  		 location_in_camera(game->player_x, game->player_y),
-  		 0,
-  		 game->player_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+  if (game->is_player_attacking) {
+    render_texture(context->renderer,
+		   sprites->player_attack->texture_tuples[0]->texture,
+		   location_in_camera(game->player_x, game->player_y),
+		   0,
+		   game->player_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+  } else {
+    render_texture(context->renderer,
+		   sprites->player_idle->texture_tuples[0]->texture,
+		   location_in_camera(game->player_x, game->player_y),
+		   0,
+		   game->player_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+  }
   render_texture(context->renderer,
   		 sprites->boss_idle->texture_tuples[0]->texture,
   		 location_in_camera(game->boss_x, game->boss_y),

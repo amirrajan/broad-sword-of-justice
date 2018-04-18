@@ -16,8 +16,6 @@ typedef struct {
   BSJ_Sprite * player_idle;
   BSJ_Sprite * player_attack;
   BSJ_Sprite * boss_idle;
-  int all_sprites_count;
-  BSJ_Sprite ** all_sprites;
 } BSJ_Sprites;
 
 // using game_new_bsj_sprite first parameter is the context second
@@ -92,13 +90,4 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 
 
   return sprites;
-}
-
-void stage_next_sprite(BSJ_Sprite * sprite) {
-  BSJ_Sprite * sprite = sprites->all_sprites[i];
-
-  sprite->current_index++;
-  if (sprite->current_index == sprite->count) {
-    sprite->current_index = 0;
-  }
 }

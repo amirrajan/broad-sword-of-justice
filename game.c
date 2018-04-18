@@ -33,6 +33,9 @@ typedef struct {
   bool keys_exit;
   double left_edge;
   double right_edge;
+  bool is_player_attacking;
+  int max_player_attack_frames;
+  int current_player_attack_frames;
 } BSJ_Game;
 
 // Headless representation of a point.
@@ -107,6 +110,12 @@ void game_new(BSJ_Game *game) {
   // definition of the edges of the world
   game->left_edge = 0;
   game->right_edge = WORLD_WIDTH - SPRITE_SIZE;
+  // attack frame definitions
+  game->is_player_attacking = false;
+  // number of frames the attack lasts
+  game->max_player_attack_frames = 3;
+  // current attack frame (when this hit's the max, the player is no longer attacking)
+  game->current_player_attack_frames = 0;
 }
 
 // Game logic to move a player left.
@@ -139,6 +148,13 @@ void game_player_jump(BSJ_Game *game)
   }
 }
 
+void game_player_attempt_attack(BSJ_Game *game) {
+  if (game->is_player_attacking) { return; }
+  // TODO: charging of the attack will go here, for now the attack is immediate
+  game->is_player_attacking = true;
+  game->current_player_attack_frames = game->max_player_attack_frames;
+}
+
 // This converts a point from game coordinates to canvas coordinates.
 // The current resolution of the game is 1024x768 with sprites sized at 128 pixels.
 BSJ_Point location_in_camera(int x, int y)
@@ -157,10 +173,19 @@ void game_tick(BSJ_Game *game)
     game->player_y = 800;
   }
 
+  // process attack
+  if (game->is_player_attacking) { game->current_player_attack_frames -= 1; }
+
+  if (game->current_player_attack_frames <= 0) {
+    game->current_player_attack_frames = 0;
+    game->is_player_attacking = false;
+  }
+
   // execute current inputs
   if (game->keys_left) { game_move_player_left(game); }
   if (game->keys_right) { game_move_player_right(game); }
   if (game->keys_a) { game_player_jump(game); }
+  if (game->keys_b) { game_player_attempt_attack(game); }
 
   // velocity
   game->player_x += game->horizontal_velocity;
