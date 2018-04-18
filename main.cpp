@@ -14,28 +14,46 @@
 #include "sdl_helpers.c"
 #include "sprite.c"
 
+// Given a sprite, a predicate for reset, x, y, and facing. Draw the sprite on the screen for its given animation step.
+// If the `draw_if` predicate is false, reset the sprite.
+void game_draw_sprite_or_reset(SDL_Context *context, BSJ_Sprite *sprite, bool draw_if, int x, int y, int facing)
+{
+  if (draw_if) {
+    render_texture(context->renderer,
+		   sprite->texture_tuples[sprite->current_index]->texture,
+		   location_in_camera(x, y),
+		   0,
+		   facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+    game_increment_sprite(sprite);
+  } else { game_reset_sprite(sprite); }
+}
+
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   SDL_RenderClear(context->renderer);
-  if (game->is_player_attacking) {
-    render_texture(context->renderer,
-		   sprites->player_attack->texture_tuples[0]->texture,
-		   location_in_camera(game->player_x, game->player_y),
-		   0,
-		   game->player_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-  } else {
-    render_texture(context->renderer,
-		   sprites->player_idle->texture_tuples[0]->texture,
-		   location_in_camera(game->player_x, game->player_y),
-		   0,
-		   game->player_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
-  }
-  render_texture(context->renderer,
-  		 sprites->boss_idle->texture_tuples[0]->texture,
-  		 location_in_camera(game->boss_x, game->boss_y),
-  		 0,
-  		 game->boss_facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+
+  game_draw_sprite_or_reset(context,
+			    sprites->player_attack,
+			    game->is_player_attacking,
+			    game->player_x,
+			    game->player_y,
+			    game->player_facing);
+
+  game_draw_sprite_or_reset(context,
+			    sprites->player_idle,
+			    !game->is_player_attacking,
+			    game->player_x,
+			    game->player_y,
+			    game->player_facing);
+
+  game_draw_sprite_or_reset(context,
+			    sprites->boss_idle,
+			    true,
+			    game->boss_x,
+			    game->boss_y,
+			    game->boss_facing);
+
   SDL_RenderPresent(context->renderer);
 }
 

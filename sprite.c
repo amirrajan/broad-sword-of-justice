@@ -8,6 +8,7 @@ typedef struct {
 typedef struct {
   IntOfSDL_Texture ** texture_tuples;
   int current_index;
+  int current_duration;
   int count;
 } BSJ_Sprite;
 
@@ -28,6 +29,7 @@ BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
   MALLOC(BSJ_Sprite, sprite);
   sprite->texture_tuples = MALLOCSA(IntOfSDL_Texture, number_of_textures);
   sprite->current_index = 0;
+  sprite->current_duration = 0;
   sprite->count = number_of_textures;
 
   for (int index = 0; index < number_of_textures; index++) {
@@ -55,6 +57,25 @@ BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
   return sprite;
 }
 
+void game_increment_sprite(BSJ_Sprite * sprite)
+{
+  sprite->current_duration++;
+  if (sprite->current_duration >= sprite->texture_tuples[sprite->current_index]->duration) {
+    sprite->current_duration = 0;
+    sprite->current_index++;
+  }
+
+  if (sprite->current_index >= sprite->count) {
+    sprite->current_index = 0;
+  }
+}
+
+void game_reset_sprite(BSJ_Sprite * sprite)
+{
+  sprite->current_duration = 0;
+  sprite->current_index = 0;
+}
+
 // This is the sprite definition for the game. Take note that
 // `game_new_bsj_sprite` is a variadic function that requires the
 // correct length to be passed in.
@@ -73,13 +94,16 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			"player_idle.png", 1  // filename plus duration
 			);
 
+  // the frame durations are closely tied to:
+  // game->max_player_attack_frames = 18;
+  // if the sum of the durations, don't match up to to the max_player_attack_frames, then things will look weird.
   sprites->player_attack =
     game_new_sprite(context,
 			4,                        // number of sprites that represent this animation
-			"player_attack1.png", 1,  // filename plus duration
-			"player_attack2.png", 1,  // filename plus duration
-			"player_attack3.png", 1,  // filename plus duration
-			"player_attack4.png", 1   // filename plus duration
+			"player_attack1.png", 3,  // filename plus duration
+			"player_attack2.png", 3,  // filename plus duration
+			"player_attack3.png", 3,  // filename plus duration
+			"player_attack4.png", 51  // filename plus duration
 			);
 
   sprites->boss_idle =
