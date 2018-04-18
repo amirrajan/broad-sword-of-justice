@@ -30,7 +30,7 @@ typedef struct {
   bool keys_a;
   bool keys_b;
   bool keys_c;
-  bool keys_q;
+  bool keys_exit;
   double left_edge;
   double right_edge;
 } BSJ_Game;
@@ -103,7 +103,8 @@ void game_new(BSJ_Game *game) {
   game->keys_a = false;
   game->keys_b = false;
   game->keys_c = false;
-  game->keys_q = false;
+  game->keys_exit = false;
+  // definition of the edges of the world
   game->left_edge = 0;
   game->right_edge = WORLD_WIDTH - SPRITE_SIZE;
 }
@@ -165,6 +166,7 @@ void game_tick(BSJ_Game *game)
   game->player_x += game->horizontal_velocity;
   game->player_y += game->vertical_velocity;
 
+  // edge collision
   if (game->player_x < game->left_edge) {
     game->player_x = game->left_edge;
   }

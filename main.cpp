@@ -1,3 +1,4 @@
+// auto-build: fswatch ./main.cpp ./*.c | xargs -n1 -I{} make
 #ifdef _WINDOWS
 #include "windows.h"
 #endif
@@ -40,17 +41,17 @@ void game_process_inputs(SDL_Event * event, BSJ_Game *game)
     // we will need to handle other types of events (e.g. window closing) here later
     if (type != SDL_KEYDOWN && type != SDL_KEYUP) { continue; }
 
-    int keySym = event->key.keysym.sym;
-    bool keyDown = type == SDL_KEYDOWN;
+    int key_sym = event->key.keysym.sym;
+    bool key_down = type == SDL_KEYDOWN;
 
-    if (keySym == SDLK_UP) { game->keys_up = keyDown; }
-    else if (keySym == SDLK_DOWN) { game->keys_down = keyDown; }
-    else if (keySym == SDLK_LEFT) { game->keys_left = keyDown; }
-    else if (keySym == SDLK_RIGHT) { game->keys_right = keyDown; }
-    else if (keySym == SDLK_a) { game->keys_a = keyDown; }
-    else if (keySym == SDLK_s) { game->keys_b = keyDown; }
-    else if (keySym == SDLK_d) { game->keys_c = keyDown; }
-    else if (keySym == SDLK_q) { game->keys_q = keyDown; }
+    if (key_sym == SDLK_UP) { game->keys_up = key_down; }
+    else if (key_sym == SDLK_DOWN) { game->keys_down = key_down; }
+    else if (key_sym == SDLK_LEFT) { game->keys_left = key_down; }
+    else if (key_sym == SDLK_RIGHT) { game->keys_right = key_down; }
+    else if (key_sym == SDLK_a) { game->keys_a = key_down; }
+    else if (key_sym == SDLK_s) { game->keys_b = key_down; }
+    else if (key_sym == SDLK_d) { game->keys_c = key_down; }
+    else if (key_sym == SDLK_c) { game->keys_exit = key_down; }
   }
 }
 
@@ -78,7 +79,7 @@ int main(int argc, char *argv[])
   SDL_SetRenderDrawColor(context->renderer, 0, 0, 0, 255);
 
   // Game loop.
-  while (game->keys_q == false) {
+  while (game->keys_exit == false) {
     game_tick(game);
     game_process_inputs(context->event, game);
     game_draw(context, sprites, game);
