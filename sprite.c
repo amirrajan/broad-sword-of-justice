@@ -23,7 +23,7 @@ typedef struct {
 // filename, frame duration pairs, the pair count MUST match the
 // second parameter. I REPEAT, IT MUST MATCH OR HORRIBLE SEG FAULTS
 // WILL HAPPEN.
-BSJ_Sprite * game_new_bsj_sprite(SDL_Context * context, int number_of_textures, ...)
+BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
 {
   MALLOC(BSJ_Sprite, sprite);
   sprite->texture_tuples = MALLOCSA(IntOfSDL_Texture, number_of_textures);
@@ -68,13 +68,13 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
   // second parameter. I REPEAT, IT MUST MATCH OR HORRIBLE SEG FAULTS
   // WILL HAPPEN.
   sprites->player_idle =
-    game_new_bsj_sprite(context,
+    game_new_sprite(context,
 			1,                    // number of sprites that represent this animation
 			"player_idle.png", 1  // filename plus duration
 			);
 
   sprites->player_attack =
-    game_new_bsj_sprite(context,
+    game_new_sprite(context,
 			4,                        // number of sprites that represent this animation
 			"player_attack1.png", 1,  // filename plus duration
 			"player_attack2.png", 1,  // filename plus duration
@@ -83,7 +83,7 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			);
 
   sprites->boss_idle =
-    game_new_bsj_sprite(context,
+    game_new_sprite(context,
 			1,
 			"boss_1_idle.png", 1
 			);

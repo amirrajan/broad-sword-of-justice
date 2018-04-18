@@ -30,10 +30,10 @@ SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * su
 void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, BSJ_Point point, double angle, SDL_RendererFlip flip)
 {
   SDL_Rect destrect;
-  destrect.x = point.x;
-  destrect.y = point.y;
-  destrect.w = 128;
-  destrect.h = 128;
+  destrect.x = point.x - 64;
+  destrect.y = point.y - 64;
+  destrect.w = 256;
+  destrect.h = 256;
 
   SDL_Rect cliprect;
   cliprect.x = 0;
