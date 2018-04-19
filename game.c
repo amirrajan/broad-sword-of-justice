@@ -1,48 +1,6 @@
+#include "game.h"
+
 #include <chipmunk.h>
-
-#define SPRITE_SIZE  128
-#define WORLD_HEIGHT 768
-#define WORLD_WIDTH  1024
-
-// Headless representation of the game.
-typedef struct {
-  double timestep;
-  double floor;
-  double player_x;
-  double player_y;
-  double player_facing;
-  double boss_x;
-  double boss_y;
-  double boss_facing;
-  double horizontal_velocity;
-  double vertical_velocity;
-  double jump_power;
-  double max_jump_hold_frames;
-  double gravity;
-  double max_horizontal_speed;
-  double horizontal_acceleration;
-  double friction;
-  int jump_hold_frames;
-  bool keys_up;
-  bool keys_down;
-  bool keys_left;
-  bool keys_right;
-  bool keys_a;
-  bool keys_b;
-  bool keys_c;
-  bool keys_exit;
-  double left_edge;
-  double right_edge;
-  bool is_player_attacking;
-  int max_player_attack_frames;
-  int current_player_attack_frames;
-} BSJ_Game;
-
-// Headless representation of a point.
-typedef struct {
-  int x;
-  int y;
-} BSJ_Point;
 
 
 // Helper (put in utility file?) to quickly get the sign.
@@ -87,26 +45,22 @@ void game_new(BSJ_Game *game) {
   // the initial power of the jump.
   game->jump_power = 10;
   // how many frames that initial jump power is sustained before gravity takes over.
-  game->max_jump_hold_frames = 18;
+  game->max_jump_hold_frames = 12;
+  // if double-jump is available
+  game->double_jump = false;
   // gravity.
   game->gravity = 10;
   // how quickly the player will stop moving horizontally.
   game->friction = 1.5;
   // top speed of player.
-  game->max_horizontal_speed = 20;
+  game->max_horizontal_speed = 10;
   // how quickly the player increases to their top speed.
-  game->horizontal_acceleration = 1.8;
+  game->horizontal_acceleration = 1.2;
   // this represents the number of frames that jump has been held for (relates to max_jump_hold_frames).
   game->jump_hold_frames = 0;
   // keys that are currently being held down.
-  game->keys_up = false;
-  game->keys_down = false;
-  game->keys_left = false;
-  game->keys_right = false;
-  game->keys_a = false;
-  game->keys_b = false;
-  game->keys_c = false;
-  game->keys_exit = false;
+  for (int i = 0; i < NUMBEROFBUTTONS; i++)
+    game->buttons[i] = BS_NONE;
   // definition of the edges of the world
   game->left_edge = 0;
   game->right_edge = WORLD_WIDTH - SPRITE_SIZE;
@@ -121,7 +75,10 @@ void game_new(BSJ_Game *game) {
 // Game logic to move a player left.
 void game_move_player_left(BSJ_Game *game)
 {
-  game->horizontal_velocity -= game->horizontal_acceleration;
+  if (game->horizontal_velocity > 0)
+    game->horizontal_velocity -= 2 * game->horizontal_acceleration;
+  else
+    game->horizontal_velocity -= game->horizontal_acceleration;
   game->player_facing = -1;
   if(game->horizontal_velocity < game->max_horizontal_speed * -1) {
     game->horizontal_velocity = game->max_horizontal_speed * -1;
@@ -131,7 +88,10 @@ void game_move_player_left(BSJ_Game *game)
 // Game logic to move a player right.
 void game_move_player_right(BSJ_Game *game)
 {
-  game->horizontal_velocity += game->horizontal_acceleration;
+  if (game->horizontal_velocity < 0)
+    game->horizontal_velocity += 2 * game->horizontal_acceleration;
+  else
+    game->horizontal_velocity += game->horizontal_acceleration;
   game->player_facing = 1;
   if(game->horizontal_velocity > game->max_horizontal_speed) {
     game->horizontal_velocity = game->max_horizontal_speed;
@@ -141,8 +101,12 @@ void game_move_player_right(BSJ_Game *game)
 // Game logic for player jump.
 void game_player_jump(BSJ_Game *game)
 {
-  // only jump on the ground
-  if (game->player_y <= game->floor) {
+  // only jump on the ground or with double jump
+  if (game->player_y <= game->floor || game->double_jump) {
+    if (game->player_y > game->floor)
+      game->double_jump = false;
+    else
+      game->double_jump = true;
     game->vertical_velocity = game->jump_power;
     game->jump_hold_frames = game->max_jump_hold_frames;
   }
@@ -169,7 +133,7 @@ void game_tick_horizontal_velocity(BSJ_Game *game) {
   game->player_x += game->horizontal_velocity;
   game->player_y += game->vertical_velocity;
 
-  if ((!game->keys_left && !game->keys_right) || (game->keys_left && game->keys_right)) {
+  if ((!game->buttons[B_LEFT] && !game->buttons[B_RIGHT]) || (game->buttons[B_LEFT] && game->buttons[B_RIGHT])) {
     game->horizontal_velocity -= game->friction * sign(game->horizontal_velocity);
     if (abs(game->horizontal_velocity) < 2) game->horizontal_velocity = 0;
   }
@@ -193,10 +157,10 @@ void game_tick_attack_inputs(BSJ_Game *game)
 
 void game_tick_move_inputs(BSJ_Game *game)
 {
-  if (game->keys_left) { game_move_player_left(game); }
-  if (game->keys_right) { game_move_player_right(game); }
-  if (game->keys_a) { game_player_jump(game); }
-  if (game->keys_b) { game_player_attempt_attack(game); }
+  if (game->buttons[B_LEFT]) { game_move_player_left(game); }
+  if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
+  if (game->buttons[B_A] == BS_PRESS) { game_player_jump(game); }
+  if (game->buttons[B_B] == BS_PRESS) { game_player_attempt_attack(game); }
 }
 
 // This will contain code to control the game.
@@ -213,7 +177,7 @@ void game_tick(BSJ_Game *game)
   game_tick_horizontal_velocity(game);
 
   // keep holding A for higher jump
-  if (game->keys_a && game->jump_hold_frames > 0) {
+  if (game->buttons[B_A] && game->jump_hold_frames > 0) {
     game->jump_hold_frames--;
     game->vertical_velocity = game->jump_power;
   } else {
