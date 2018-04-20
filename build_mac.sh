@@ -1,10 +1,9 @@
-c++ ./*.c main.cpp -Wl \
-    -I./ \
-    -I./SDL2/Headers \
-    -I./SDL2_image \
-    -I./SDL2_ttf \
-    -lSDL2 \
-    -lSDL2_image \
-    -lSDL2_ttf \
-    -I./chipmunk/include/chipmunk \
-    -o ./broad-sword-of-justice
+clang *.c -I./ \
+      -I./SDL/include \
+      -I./SDL_image \
+      -I./SDL_ttf \
+      -I./Chipmunk2d/include/chipmunk \
+      -L./SDL \
+      -L./SDL_image \
+      -L./SDL_ttf \
+      -o ./broad-sword-of-justice -lSDL2 -lSDL2_image -lSDL2_ttf
