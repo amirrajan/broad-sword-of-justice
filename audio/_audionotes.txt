@@ -1,0 +1,11 @@
+01 Justice Lite
+    + game intro theme
+    + intended for animation of Justice statue cracking with a flash of light
+    
+02 Somebody Kicked My Poochy
+    + theme for the street level/boss
+    
+03 Theme Of Justice, & Theme Of Justice LOOP
+    + anthem that plays whenever you kill a boss
+    + the first is the main theme, which does not loop
+    + the LOOP one is intended to loop after the main one plays until the player presses 'OK' button to continue
