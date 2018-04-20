@@ -1,4 +1,5 @@
 #include "game.h"
+#include <stdlib.h>
 
 #include <chipmunk.h>
 
@@ -135,7 +136,7 @@ void game_tick_horizontal_velocity(BSJ_Game *game) {
 
   if ((!game->buttons[B_LEFT] && !game->buttons[B_RIGHT]) || (game->buttons[B_LEFT] && game->buttons[B_RIGHT])) {
     game->horizontal_velocity -= game->friction * sign(game->horizontal_velocity);
-    if (abs(game->horizontal_velocity) < 2) game->horizontal_velocity = 0;
+    if (fabs(game->horizontal_velocity) < 2) game->horizontal_velocity = 0;
   }
 }
 

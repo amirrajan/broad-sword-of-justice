@@ -25,6 +25,8 @@ if(WIN32)
 	   main.c
 	   game.h
 	   game.c
+	   draw.h
+	   draw.c
 	   sprite.h
 	   sprite.c
 	   sdl_helpers.h

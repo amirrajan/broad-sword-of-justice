@@ -1,8 +1,28 @@
 ## How to get this running
 
-- Install `SDL2`, `SDL2_ttf`, `SDL2_image`.
-- Clone the repo.
-- Initialize the submodules.
-- Run `ccmake .` and set the build type to `Debug` and target architecture to `x86_64`.
-- Run `make`.
-- Run `./broad-sword-of-justice`
+Clone the repo.
+
+Run the following:
+
+```
+cd SDL
+./configure
+make
+
+cd ../SDL_image
+./configure
+make
+
+cd ../SDL_ttf
+./configure
+make
+
+cd ../Chipmunk2D/xcode
+./macstatic.command
+
+cd ../../
+sh ./build_mac.sh
+./broad-sword-of-justice
+```
+
+From here on out, all you have to do is run `./build_mac.sh`.
