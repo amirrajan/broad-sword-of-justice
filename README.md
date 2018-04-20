@@ -17,11 +17,10 @@ cd ../SDL_ttf
 ./configure
 make
 
-cd ../Chipmunk2D
-cmake .
-make
+cd ../Chipmunk2D/xcode
+./macstatic.command
 
-cd ..
+cd ../../
 sh ./build_mac.sh
 ./broad-sword-of-justice
 ```
