@@ -1,3 +1,29 @@
+pkill broad-sword-of-justice
+
+if [[ ! -d ./SDL/build/ ]]; then
+    echo "SDL build output doesn't exist. BUILDING!!!"
+    pushd SDL
+    ./configure
+    make
+    popd
+fi
+
+if [ ! -f ./SDL_image/libSDL2_image.la ]; then
+    echo "SDL_image build output doesn't exist. BUILDING!!!"
+    pushd ./SDL_image
+    ./configure
+    make
+    popd
+fi
+
+if [ ! -f ./SDL_ttf/libSDL2_ttf.la ]; then
+    echo "SDL_ttf build output doesn't exist. BUILDING!!!"
+    pushd ./SDL_ttf
+    ./configure
+    make
+    popd
+fi
+
 clang *.c -I./ \
       -I./SDL/include \
       -I./SDL_image \

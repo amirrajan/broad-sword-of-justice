@@ -1,28 +1,7 @@
-## How to get this running
+# How to get this running
 
 Clone the repo.
 
-Run the following:
+## On Mac
 
-```
-cd SDL
-./configure
-make
-
-cd ../SDL_image
-./configure
-make
-
-cd ../SDL_ttf
-./configure
-make
-
-cd ../Chipmunk2D/xcode
-./macstatic.command
-
-cd ../../
-sh ./build_mac.sh
-./broad-sword-of-justice
-```
-
-From here on out, all you have to do is run `./build_mac.sh`.
+Run `sh ./build_mac.sh` and pray.

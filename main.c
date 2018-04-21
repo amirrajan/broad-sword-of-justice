@@ -1,4 +1,5 @@
-// auto-build: fswatch ./main.cpp ./*.c | xargs -n1 -I{} make
+// auto-build: fswatch ./*.c | xargs -n1 -I{} sh ./build_mac.sh
+//             fswatch ./broad-sword-of-justice | xargs -n1 -I{} ./broad-sword-of-justice
 #ifdef _WINDOWS
 #include "windows.h"
 #define SDL_MAIN_HANDLED
