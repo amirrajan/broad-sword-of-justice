@@ -7,3 +7,4 @@ Makefile
 /Thumbs.db
 /COPYONLY
 *DS_Store*
+/TAGS

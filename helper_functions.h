@@ -1,0 +1,1 @@
+double sign(double value);

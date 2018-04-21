@@ -10,6 +10,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "malloc_macros.c"
+#include "helper_functions.h"
 #include "game.h"
 #include "sdl_helpers.h"
 #include "sprite.h"

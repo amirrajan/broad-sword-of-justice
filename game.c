@@ -3,13 +3,6 @@
 
 #include <chipmunk.h>
 
-
-// Helper (put in utility file?) to quickly get the sign.
-double sign(double value)
-{
-  return (value > 0) - (value < 0);
-}
-
 bool is_player_hit(BSJ_Game *game) {
   cpBB player_box;
   player_box.l = game->player_x;
