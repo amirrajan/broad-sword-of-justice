@@ -20,10 +20,10 @@
 
 
 SOUND EFFECTS
-
-01 Dodge
-02 Jump
-03 Hurt
-04 Hurt Alt
-05 Swing
-06 Gunshot
+    01 Dodge
+    02 Jump
+    03 Hurt
+    04 Hurt Alt
+    05 Swing
+    06 Gunshot
+    
