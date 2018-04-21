@@ -26,4 +26,5 @@ SOUND EFFECTS
     04 Hurt Alt
     05 Swing
     06 Gunshot
+    07 Man Kill This Fool
     
