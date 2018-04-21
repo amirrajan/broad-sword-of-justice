@@ -1,6 +1,6 @@
 #include "sdl_helpers.h"
 #include "sprite.h"
-#include "draw.h"
+#include "game_io.h"
 #include <SDL.h>
 #include <SDL_render.h>
 #include <SDL_image.h>

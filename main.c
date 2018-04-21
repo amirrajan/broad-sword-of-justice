@@ -13,7 +13,7 @@
 #include "game.h"
 #include "sdl_helpers.h"
 #include "sprite.h"
-#include "draw.h"
+#include "game_io.h"
 
 #ifdef __cplusplus
   extern "C"
