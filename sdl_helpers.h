@@ -14,6 +14,7 @@ typedef struct {
   SDL_Surface * surface;
   TTF_Font * font;
   SDL_Event * event;
+  SDL_Joystick * joystick;
 } SDL_Context;
 
 SDL_Context * game_new_sdl_context();

@@ -12,6 +12,7 @@ SDL_Context * game_new_sdl_context()
   o->surface = MALLOCA(SDL_Surface);
   o->font = TTF_OpenFont("PTS75F.ttf", 12);
   o->event = MALLOCA(SDL_Event);
+  if (SDL_NumJoysticks() > 0) { o->joystick = SDL_JoystickOpen(0); }
   return o;
 }
 
