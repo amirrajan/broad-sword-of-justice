@@ -9,3 +9,6 @@
     + anthem that plays whenever you kill a boss
     + the first is the main theme, which does not loop
     + the LOOP one is intended to loop after the main one plays until the player presses 'OK' button to continue
+
+04 Thrashing My Chill
+    + theme for the yacht level
