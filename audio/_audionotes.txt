@@ -1,9 +1,11 @@
 01 Justice Lite
     + game intro theme
     + intended for animation of Justice statue cracking with a flash of light
+    + does not loop
     
 02 Somebody Kicked My Poochy
     + theme for the street level/boss
+    + loops
     
 03 Theme Of Justice, & Theme Of Justice LOOP
     + anthem that plays whenever you kill a boss
@@ -12,3 +14,16 @@
 
 04 Thrashing My Chill
     + theme for the yacht level
+    + loops
+
+
+
+
+SOUND EFFECTS
+
+01 Dodge
+02 Jump
+03 Hurt
+04 Hurt Alt
+05 Swing
+06 Gunshot
