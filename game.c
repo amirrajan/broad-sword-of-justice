@@ -153,8 +153,8 @@ void game_tick_move_inputs(BSJ_Game *game)
 {
   if (game->buttons[B_LEFT]) { game_move_player_left(game); }
   if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
-  if (game->buttons[B_A] == BS_PRESS) { game_player_jump(game); }
-  if (game->buttons[B_B] == BS_PRESS) { game_player_attempt_attack(game); }
+  if (game->buttons[B_JUMP] == BS_PRESS) { game_player_jump(game); }
+  if (game->buttons[B_ATTACK] == BS_PRESS) { game_player_attempt_attack(game); }
 }
 
 // This will contain code to control the game.
@@ -171,7 +171,7 @@ void game_tick(BSJ_Game *game)
   game_tick_horizontal_velocity(game);
 
   // keep holding A for higher jump
-  if (game->buttons[B_A] && game->jump_hold_frames > 0) {
+  if (game->buttons[B_JUMP] && game->jump_hold_frames > 0) {
     game->jump_hold_frames--;
     game->vertical_velocity = game->jump_power;
   } else {

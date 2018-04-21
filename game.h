@@ -21,9 +21,9 @@ typedef enum {
   B_DOWN,
   B_LEFT,
   B_RIGHT,
-  B_A,
-  B_B,
-  B_C,
+  B_JUMP,
+  B_ATTACK,
+  B_BLOCK,
   B_EXIT,
   NUMBEROFBUTTONS
 } buttons;

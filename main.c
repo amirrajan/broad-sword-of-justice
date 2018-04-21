@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if (accumulator > TIME_PER_TICK)
     {
       accumulator -= TIME_PER_TICK;
-      game_process_inputs(context->event, game);
+      game_process_inputs(context, game);
       game_tick(game);
     }
 

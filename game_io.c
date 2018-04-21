@@ -52,6 +52,41 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 // This takes in the current inputs by SDL and maps them to methods to call within the game.
 void game_process_inputs(SDL_Event * event, BSJ_Game *game)
 {
+  }
+
+
+void game_process_keyboard_inputs(SDL_Context *context, BSJ_Game *game)
+{
+  int type = context->event->type;
+
+  if (type == SDL_KEYDOWN && context->event->key.repeat == 0) {
+      int key_sym = context->event->key.keysym.sym;
+      if (key_sym == SDLK_UP) { game->buttons[B_UP] = BS_PRESS; }
+      else if (key_sym == SDLK_DOWN) { game->buttons[B_DOWN] = BS_PRESS; }
+      else if (key_sym == SDLK_LEFT) { game->buttons[B_LEFT] = BS_PRESS; }
+      else if (key_sym == SDLK_RIGHT) { game->buttons[B_RIGHT] = BS_PRESS; }
+      else if (key_sym == SDLK_a) { game->buttons[B_JUMP] = BS_PRESS; }
+      else if (key_sym == SDLK_s) { game->buttons[B_ATTACK] = BS_PRESS; }
+      else if (key_sym == SDLK_d) { game->buttons[B_BLOCK] = BS_PRESS; }
+      else if (key_sym == SDLK_c) { game->buttons[B_EXIT] = BS_PRESS; }
+    } else if (type == SDL_KEYUP && context->event->key.repeat == 0) {
+      int key_sym = context->event->key.keysym.sym;
+      if (key_sym == SDLK_UP) { game->buttons[B_UP] = BS_RELEASE; }
+      else if (key_sym == SDLK_DOWN) { game->buttons[B_DOWN] = BS_RELEASE; }
+      else if (key_sym == SDLK_LEFT) { game->buttons[B_LEFT] = BS_RELEASE; }
+      else if (key_sym == SDLK_RIGHT) { game->buttons[B_RIGHT] = BS_RELEASE; }
+      else if (key_sym == SDLK_a) { game->buttons[B_JUMP] = BS_RELEASE; }
+      else if (key_sym == SDLK_s) { game->buttons[B_ATTACK] = BS_RELEASE; }
+      else if (key_sym == SDLK_d) { game->buttons[B_BLOCK] = BS_RELEASE; }
+      else if (key_sym == SDLK_c) { game->buttons[B_EXIT] = BS_RELEASE; }
+    } else if (type == SDL_QUIT) {
+      game->buttons[B_EXIT] = BS_PRESS;
+    }
+}
+
+// This takes in the current inputs by SDL and maps them to methods to call within the game.
+void game_process_inputs(SDL_Context *context, BSJ_Game *game)
+{
   // advance state of keys
   for (int i = 0; i < NUMBEROFBUTTONS; i++)
   {
@@ -62,36 +97,7 @@ void game_process_inputs(SDL_Event * event, BSJ_Game *game)
   }
 
   // poll for all events
-  while (SDL_PollEvent(event)) {
-    int type = event->type;
-
-    if (type == SDL_KEYDOWN && event->key.repeat == 0)
-    {
-      int key_sym = event->key.keysym.sym;
-      if (key_sym == SDLK_UP) { game->buttons[B_UP] = BS_PRESS; }
-      else if (key_sym == SDLK_DOWN) { game->buttons[B_DOWN] = BS_PRESS; }
-      else if (key_sym == SDLK_LEFT) { game->buttons[B_LEFT] = BS_PRESS; }
-      else if (key_sym == SDLK_RIGHT) { game->buttons[B_RIGHT] = BS_PRESS; }
-      else if (key_sym == SDLK_a) { game->buttons[B_A] = BS_PRESS; }
-      else if (key_sym == SDLK_s) { game->buttons[B_B] = BS_PRESS; }
-      else if (key_sym == SDLK_d) { game->buttons[B_C] = BS_PRESS; }
-      else if (key_sym == SDLK_c) { game->buttons[B_EXIT] = BS_PRESS; }
-    }
-    else if (type == SDL_KEYUP && event->key.repeat == 0)
-    {
-      int key_sym = event->key.keysym.sym;
-      if (key_sym == SDLK_UP) { game->buttons[B_UP] = BS_RELEASE; }
-      else if (key_sym == SDLK_DOWN) { game->buttons[B_DOWN] = BS_RELEASE; }
-      else if (key_sym == SDLK_LEFT) { game->buttons[B_LEFT] = BS_RELEASE; }
-      else if (key_sym == SDLK_RIGHT) { game->buttons[B_RIGHT] = BS_RELEASE; }
-      else if (key_sym == SDLK_a) { game->buttons[B_A] = BS_RELEASE; }
-      else if (key_sym == SDLK_s) { game->buttons[B_B] = BS_RELEASE; }
-      else if (key_sym == SDLK_d) { game->buttons[B_C] = BS_RELEASE; }
-      else if (key_sym == SDLK_c) { game->buttons[B_EXIT] = BS_RELEASE; }
-    }
-    else if (type == SDL_QUIT)
-    {
-      game->buttons[B_EXIT] = BS_PRESS;
-    }
+  while (SDL_PollEvent(context->event)) {
+    game_process_keyboard_inputs(context, game);
   }
 }
