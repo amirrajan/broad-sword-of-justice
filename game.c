@@ -12,13 +12,30 @@ bool is_player_hit(BSJ_Game *game) {
   player_box.t = game->player_y;
   player_box.b = game->player_y - SPRITE_SIZE / 2.0;
 
+  // check if the player is touching the boss
   cpBB boss_box;
   boss_box.l = game->boss_x;
   boss_box.r = game->boss_x + SPRITE_SIZE / 2.0;
   boss_box.t = game->boss_y;
   boss_box.b = game->boss_y - SPRITE_SIZE / 2.0;
 
-  return (bool)cpBBIntersects(player_box, boss_box);
+  if ((bool)cpBBIntersects(player_box, boss_box)) { return true; };
+
+  // check if the player is touching the projectiles
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    BSJ_Projectile * projectile = game->boss_projectiles[i];
+    if (!projectile->unused) {
+      cpBB projectile_box;
+      projectile_box.l = projectile->x;
+      projectile_box.r = projectile->x + projectile->w;
+      projectile_box.t = projectile->y;
+      projectile_box.b = projectile->y - projectile->h;
+      if ((bool)cpBBIntersects(player_box, projectile_box)) { return true; };
+    }
+  }
+
+
+  return false;
 }
 
 // Initialization of the game.
@@ -67,7 +84,7 @@ void game_new(BSJ_Game *game) {
   // current attack frame (when this hit's the max, the player is no longer attacking)
   game->current_player_attack_frames = 0;
 
-  // allocate 100 projectiles
+  // allocate a pool of projectiles based on the size of `boss_projectile_count`
   game->max_boss_attack_cooldown = 1 * 60;
   game->boss_attack_cooldown = game->max_boss_attack_cooldown;
   game->boss_projectile_count = 10;
@@ -180,6 +197,7 @@ int game_index_of_unused_projectile(BSJ_Game *game) {
 
 void game_tick_boss(BSJ_Game *game)
 {
+  // knife throwing boss
   game->boss_attack_cooldown -= 1;
   if (game->boss_attack_cooldown > 0) { return; }
 

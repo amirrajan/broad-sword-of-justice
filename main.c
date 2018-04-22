@@ -1,4 +1,4 @@
-// auto-build: fswatch ./*.c | xargs -n1 -I{} sh ./build_mac.sh
+// auto-build: fswatch ./*.h ./*.c | xargs -n1 -I{} sh ./build_mac.sh
 //             fswatch ./broad-sword-of-justice | xargs -n1 -I{} ./broad-sword-of-justice
 #ifdef _WINDOWS
 #include "windows.h"

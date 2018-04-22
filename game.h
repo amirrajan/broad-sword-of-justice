@@ -33,8 +33,8 @@ typedef enum {
 typedef struct {
   double x;
   double y;
-  double width;
-  double height;
+  double w;
+  double h;
   double speed;
   double angle;
   bool unused;
