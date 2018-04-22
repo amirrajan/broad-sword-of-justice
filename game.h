@@ -88,32 +88,12 @@ typedef struct {
 // Helper (put in utility file?) to quickly get the sign.
 double sign(double value);
 
-bool game_is_player_hit(BSJ_Game *game);
-bool game_is_boss_hit(BSJ_Game *game);
-
 // Initialization of the game.
 void game_new(BSJ_Game *game);
-
-// Game logic to move a player left.
-void game_move_player_left(BSJ_Game *game);
-
-// Game logic to move a player right.
-void game_move_player_right(BSJ_Game *game);
-
-// Game logic for player jump.
-void game_player_jump(BSJ_Game *game);
-
-void game_player_attempt_attack(BSJ_Game *game);
 
 // This converts a point from game coordinates to canvas coordinates.
 // The current resolution of the game is 1024x768 with sprites sized at 128 pixels.
 BSJ_Point location_in_camera(int x, int y);
-
-void game_tick_horizontal_velocity(BSJ_Game *game);
-void game_tick_edge_collision(BSJ_Game *game);
-void game_tick_attack_inputs(BSJ_Game *game);
-
-void game_tick_move_inputs(BSJ_Game *game);
 
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game);
