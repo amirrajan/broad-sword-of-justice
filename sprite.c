@@ -101,6 +101,12 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			"player_attack4.png", 51  // filename plus duration
 			);
 
+  sprites->player_charge =
+    game_new_sprite(context, 128, 128,
+			1,                        // number of sprites that represent this animation
+		        "player_charge.png", 1   // filename plus duration
+			);
+
   sprites->boss_idle =
     game_new_sprite(context, 128, 128,
 			1,

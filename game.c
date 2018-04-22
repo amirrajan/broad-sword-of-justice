@@ -94,6 +94,10 @@ void game_new(BSJ_Game *game) {
     game->boss_projectiles[i] = MALLOCA(BSJ_Projectile);
     game->boss_projectiles[i]->unused = true;
   }
+
+  game->is_player_charging = false;
+  game->current_charging_frames = 0;
+  game->max_charging_frames = 240;
 }
 
 // Game logic to move a player left.
@@ -137,10 +141,26 @@ void game_player_jump(BSJ_Game *game)
 }
 
 void game_player_attempt_attack(BSJ_Game *game) {
+  if (!game->can_player_attack) { return; }
   if (game->is_player_attacking) { return; }
-  // TODO: charging of the attack will go here, for now the attack is immediate
   game->is_player_attacking = true;
   game->current_player_attack_frames = game->max_player_attack_frames;
+}
+
+void game_player_clear_charge(BSJ_Game *game) {
+  game->is_player_charging = false;
+  game->current_charging_frames = 0;
+  game->can_player_attack = false;
+}
+
+void game_player_attempt_charge(BSJ_Game *game) {
+  game->is_player_charging = true;
+  game->current_charging_frames++;
+  if (game->current_charging_frames > game->max_charging_frames) {
+    game->can_player_attack = true;
+    game->is_player_charging = false;
+    game->current_charging_frames = 0;
+  }
 }
 
 // This converts a point from game coordinates to canvas coordinates.
@@ -176,6 +196,7 @@ void game_tick_attack_inputs(BSJ_Game *game)
   if (game->current_player_attack_frames <= 0) {
     game->current_player_attack_frames = 0;
     game->is_player_attacking = false;
+    game->can_player_attack = false;
   }
 }
 
@@ -184,7 +205,12 @@ void game_tick_move_inputs(BSJ_Game *game)
   if (game->buttons[B_LEFT]) { game_move_player_left(game); }
   if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
   if (game->buttons[B_JUMP] == BS_PRESS) { game_player_jump(game); }
-  if (game->buttons[B_ATTACK] == BS_PRESS) { game_player_attempt_attack(game); }
+  if (game->buttons[B_ATTACK] == BS_PRESS || game->buttons[B_ATTACK] == BS_HOLD) {
+    game_player_attempt_charge(game);
+    game_player_attempt_attack(game);
+  } else {
+    game_player_clear_charge(game);
+  }
 }
 
 int game_index_of_unused_projectile(BSJ_Game *game) {
@@ -206,9 +232,10 @@ void game_tick_boss(BSJ_Game *game)
 
   BSJ_Projectile * projectile = game->boss_projectiles[unused_projectile_index];
   projectile->unused = false;
-  projectile->x = game->boss_x;
+  projectile->x = game->boss_x - SPRITE_SIZE / 4;
   projectile->y = game->boss_y;
-  projectile->speed = 1; // one pixel per frame
+  projectile->w = 7;
+  projectile->h = 1;
   projectile->speed = 1; // one pixel per frame
   projectile->angle = 3.14;
 
@@ -219,11 +246,19 @@ void game_tick_boss_projectiles(BSJ_Game *game)
 {
   for (int i = 0; i < game->boss_projectile_count; i++) {
     BSJ_Projectile * projectile = game->boss_projectiles[i];
-    if (!projectile->unused) {
-      projectile->x -= projectile->speed;
-    }
+    if (!projectile->unused) { projectile->x -= projectile->speed; }
 
     if (projectile->x < -100) { projectile->unused = true; }
+  }
+}
+
+void game_reset(BSJ_Game *game) {
+  game->player_x = 0;
+  game->player_y = 800;
+
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    BSJ_Projectile * projectile = game->boss_projectiles[i];
+    projectile->unused = true;
   }
 }
 
@@ -231,8 +266,7 @@ void game_tick_boss_projectiles(BSJ_Game *game)
 void game_tick(BSJ_Game *game)
 {
   if(is_player_hit(game)) {
-    game->player_x = 0;
-    game->player_y = 800;
+    game_reset(game);
   }
 
   game_tick_attack_inputs(game);

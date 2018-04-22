@@ -68,8 +68,12 @@ typedef struct {
   double left_edge;
   double right_edge;
   bool is_player_attacking;
+  bool is_player_charging;
   int max_player_attack_frames;
   int current_player_attack_frames;
+  bool can_player_attack;
+  int current_charging_frames;
+  int max_charging_frames;
 } BSJ_Game;
 
 // Headless representation of a point.
