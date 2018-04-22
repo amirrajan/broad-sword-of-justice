@@ -34,14 +34,11 @@ bool game_is_player_hit(BSJ_Game *game) {
     }
   }
 
-
   return false;
 }
 
 bool game_is_boss_hit(BSJ_Game *game) {
   if (!game->is_player_attacking) return false;
-
-  if (game->current_player_attack_frames < game->max_player_attack_frames) return false;
 
   if (game->player_facing == 1 &&
       (game->boss_x - game->player_x) < 100 &&
@@ -115,6 +112,7 @@ void game_new(BSJ_Game *game) {
     game->boss_projectiles[i]->unused = true;
   }
 
+  // charging specifications
   game->is_player_charging = false;
   game->current_charging_frames = 0;
   game->max_charging_frames = 240;
@@ -217,7 +215,7 @@ void game_tick_edge_collision(BSJ_Game *game)
   if (game->player_x > game->right_edge) { game->player_x = game->right_edge; }
 }
 
-void game_tick_attack_inputs(BSJ_Game *game)
+void game_tick_attack(BSJ_Game *game)
 {
   if (game->is_player_attacking) { game->current_player_attack_frames -= 1; }
 
@@ -228,7 +226,7 @@ void game_tick_attack_inputs(BSJ_Game *game)
   }
 }
 
-void game_tick_move_inputs(BSJ_Game *game)
+void game_tick_buttons(BSJ_Game *game)
 {
   if (game->buttons[B_LEFT]) { game_move_player_left(game); }
   if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
@@ -290,24 +288,18 @@ void game_reset(BSJ_Game *game) {
   }
 }
 
-// This will contain code to control the game.
-void game_tick(BSJ_Game *game)
+void game_block_inputs(BSJ_Game *game)
 {
-  if(game_is_player_hit(game)) {
-    game_reset(game);
-  }
 
-  if(game_is_boss_hit(game)) {
-    game_reset(game);
-  }
+}
 
-  game_tick_attack_inputs(game);
-  game_tick_move_inputs(game);
-  game_tick_edge_collision(game);
-  game_tick_horizontal_velocity(game);
-  game_tick_boss(game);
-  game_tick_boss_projectiles(game);
+void game_process_blocks(BSJ_Game *game)
+{
 
+}
+
+void game_tick_vertical_velocity(BSJ_Game *game)
+{
   // keep holding A for higher jump
   if (game->buttons[B_JUMP] && game->jump_hold_frames > 0) {
     game->jump_hold_frames--;
@@ -323,4 +315,25 @@ void game_tick(BSJ_Game *game)
     game->vertical_velocity = 0;
     game->player_y = game->floor;
   }
+}
+
+// This will contain code to control the game.
+void game_tick(BSJ_Game *game)
+{
+  if(game_is_player_hit(game)) {
+    game_reset(game);
+  }
+
+  if(game_is_boss_hit(game)) {
+    game_reset(game);
+  }
+
+  game_tick_buttons(game);
+  game_tick_attack(game);
+  game_tick_edge_collision(game);
+  game_tick_horizontal_velocity(game);
+  game_tick_vertical_velocity(game);
+  game_tick_boss(game);
+  game_tick_boss_projectiles(game);
+
 }
