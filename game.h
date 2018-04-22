@@ -85,7 +85,8 @@ typedef struct {
 // Helper (put in utility file?) to quickly get the sign.
 double sign(double value);
 
-bool is_player_hit(BSJ_Game *game);
+bool game_is_player_hit(BSJ_Game *game);
+bool game_is_boss_hit(BSJ_Game *game);
 
 // Initialization of the game.
 void game_new(BSJ_Game *game);

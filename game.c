@@ -5,7 +5,7 @@
 
 #include <chipmunk.h>
 
-bool is_player_hit(BSJ_Game *game) {
+bool game_is_player_hit(BSJ_Game *game) {
   cpBB player_box;
   player_box.l = game->player_x;
   player_box.r = game->player_x + SPRITE_SIZE / 2.0;
@@ -34,6 +34,26 @@ bool is_player_hit(BSJ_Game *game) {
     }
   }
 
+
+  return false;
+}
+
+bool game_is_boss_hit(BSJ_Game *game) {
+  if (!game->is_player_attacking) return false;
+
+  if (game->current_player_attack_frames < game->max_player_attack_frames) return false;
+
+  if (game->player_facing == 1 &&
+      (game->boss_x - game->player_x) < 100 &&
+      (game->boss_x - game->player_x) > 0) {
+    return true;
+  }
+
+  if (game->player_facing == -1 &&
+      (game->player_x - game->boss_x) < 100 &&
+      (game->player_x - game->boss_x) > 0) {
+    return true;
+  }
 
   return false;
 }
@@ -273,7 +293,11 @@ void game_reset(BSJ_Game *game) {
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game)
 {
-  if(is_player_hit(game)) {
+  if(game_is_player_hit(game)) {
+    game_reset(game);
+  }
+
+  if(game_is_boss_hit(game)) {
     game_reset(game);
   }
 
