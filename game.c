@@ -88,7 +88,7 @@ void game_new(BSJ_Game *game) {
   // top speed of player.
   game->max_horizontal_speed = 10;
   // how quickly the player increases to their top speed.
-  game->horizontal_acceleration = 1.2;
+  game->horizontal_acceleration = 0.5;
   // this represents the number of frames that jump has been held for (relates to max_jump_hold_frames).
   game->jump_hold_frames = 0;
   // keys that are currently being held down.
@@ -124,7 +124,7 @@ void game_new(BSJ_Game *game) {
 void game_move_player_left(BSJ_Game *game)
 {
   if (game->is_player_charging)
-    game->horizontal_velocity = 0;
+    game->horizontal_velocity *= 0.9;
   else if (game->horizontal_velocity > 0)
     game->horizontal_velocity -= 2 * game->horizontal_acceleration;
   else
@@ -141,7 +141,7 @@ void game_move_player_left(BSJ_Game *game)
 void game_move_player_right(BSJ_Game *game)
 {
   if (game->is_player_charging)
-    game->horizontal_velocity = 0;
+    game->horizontal_velocity *= 0.9;
   else if (game->horizontal_velocity < 0)
     game->horizontal_velocity += 2 * game->horizontal_acceleration;
   else
