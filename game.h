@@ -28,6 +28,16 @@ typedef enum {
   NUMBEROFBUTTONS
 } buttons;
 
+typedef struct {
+  double x;
+  double y;
+  double width;
+  double height;
+  double speed;
+  double angle;
+  bool unused;
+} BSJ_Projectile;
+
 // Headless representation of the game.
 typedef struct {
   double timestep;
@@ -38,6 +48,10 @@ typedef struct {
   double boss_x;
   double boss_y;
   double boss_facing;
+  int boss_projectile_count;
+  BSJ_Projectile ** boss_projectiles;
+  int boss_attack_cooldown;
+  int max_boss_attack_cooldown;
   double horizontal_velocity;
   double vertical_velocity;
   double jump_power;

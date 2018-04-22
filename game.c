@@ -1,4 +1,6 @@
 #include "game.h"
+#include "malloc_macros.c"
+#include <SDL.h>
 #include <stdlib.h>
 
 #include <chipmunk.h>
@@ -64,6 +66,17 @@ void game_new(BSJ_Game *game) {
   game->max_player_attack_frames = 18;
   // current attack frame (when this hit's the max, the player is no longer attacking)
   game->current_player_attack_frames = 0;
+
+  // allocate 100 projectiles
+  game->max_boss_attack_cooldown = 1 * 60;
+  game->boss_attack_cooldown = game->max_boss_attack_cooldown;
+  game->boss_projectile_count = 10;
+  game->boss_projectiles = MALLOCSA(BSJ_Projectile, game->boss_projectile_count);
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    // empty projectile
+    game->boss_projectiles[i] = MALLOCA(BSJ_Projectile);
+    game->boss_projectiles[i]->unused = true;
+  }
 }
 
 // Game logic to move a player left.
@@ -157,6 +170,45 @@ void game_tick_move_inputs(BSJ_Game *game)
   if (game->buttons[B_ATTACK] == BS_PRESS) { game_player_attempt_attack(game); }
 }
 
+int game_index_of_unused_projectile(BSJ_Game *game) {
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    if (game->boss_projectiles[i]->unused) { return i; }
+  }
+
+  return -1;
+}
+
+void game_tick_boss(BSJ_Game *game)
+{
+  game->boss_attack_cooldown -= 1;
+  if (game->boss_attack_cooldown > 0) { return; }
+
+  int unused_projectile_index = game_index_of_unused_projectile(game);
+  if (unused_projectile_index == -1) { return; }
+
+  BSJ_Projectile * projectile = game->boss_projectiles[unused_projectile_index];
+  projectile->unused = false;
+  projectile->x = game->boss_x;
+  projectile->y = game->boss_y;
+  projectile->speed = 1; // one pixel per frame
+  projectile->speed = 1; // one pixel per frame
+  projectile->angle = 3.14;
+
+  game->boss_attack_cooldown = game->max_boss_attack_cooldown;
+}
+
+void game_tick_boss_projectiles(BSJ_Game *game)
+{
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    BSJ_Projectile * projectile = game->boss_projectiles[i];
+    if (!projectile->unused) {
+      projectile->x -= projectile->speed;
+    }
+
+    if (projectile->x < -100) { projectile->unused = true; }
+  }
+}
+
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game)
 {
@@ -169,6 +221,8 @@ void game_tick(BSJ_Game *game)
   game_tick_move_inputs(game);
   game_tick_edge_collision(game);
   game_tick_horizontal_velocity(game);
+  game_tick_boss(game);
+  game_tick_boss_projectiles(game);
 
   // keep holding A for higher jump
   if (game->buttons[B_JUMP] && game->jump_hold_frames > 0) {

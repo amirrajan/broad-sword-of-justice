@@ -26,6 +26,13 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   SDL_RenderClear(context->renderer);
 
   game_draw_sprite_or_reset(context,
+			    sprites->boss_idle,
+			    true,
+			    game->boss_x,
+			    game->boss_y,
+			    game->boss_facing);
+
+  game_draw_sprite_or_reset(context,
 			    sprites->player_attack,
 			    game->is_player_attacking,
 			    game->player_x,
@@ -39,12 +46,15 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			    game->player_y,
 			    game->player_facing);
 
-  game_draw_sprite_or_reset(context,
-			    sprites->boss_idle,
-			    true,
-			    game->boss_x,
-			    game->boss_y,
-			    game->boss_facing);
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    game_draw_sprite_or_reset(context,
+			      sprites->boss_projectile,
+			      !game->boss_projectiles[i]->unused,
+			      game->boss_projectiles[i]->x,
+			      game->boss_projectiles[i]->y,
+			      game->boss_facing);
+  }
+
 
   SDL_RenderPresent(context->renderer);
 }

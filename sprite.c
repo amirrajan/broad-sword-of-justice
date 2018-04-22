@@ -21,7 +21,7 @@ BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
   for (int index = 0; index < number_of_textures; index++) {
     sprite->texture_tuples[index] = MALLOCA(IntOfSDL_Texture);
   }
-  
+
   va_list file_duration_pairs;
   va_start(file_duration_pairs, number_of_textures);
   int texture_index = 0;
@@ -31,7 +31,7 @@ BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
       context->surface = IMG_Load(file_path);
       SDL_SetColorKey(context->surface, SDL_TRUE, SDL_MapRGB(context->surface->format, 0x00, 0x40, 0x80));
       sprite->texture_tuples[texture_index]->texture = SDL_CreateTextureFromSurface(context->renderer, context->surface);
-      sprite->texture_tuples[texture_index]->texture = 
+      sprite->texture_tuples[texture_index]->texture =
         create_texture_from_file(context->renderer,
 		                         context->surface,
 		                         file_path);
@@ -42,7 +42,7 @@ BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
     }
   }
   va_end(file_duration_pairs);
-  
+
 
   return sprite;
 }
@@ -90,7 +90,7 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
   sprites->player_attack =
     game_new_sprite(context,
 			4,                        // number of sprites that represent this animation
-      "player_attack1.png", 3,  // filename plus duration
+		        "player_attack1.png", 3,  // filename plus duration
 			"player_attack2.png", 3,  // filename plus duration
 			"player_attack3.png", 3,  // filename plus duration
 			"player_attack4.png", 51  // filename plus duration
@@ -99,9 +99,14 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
   sprites->boss_idle =
     game_new_sprite(context,
 			1,
-			"boss_1_idle.png", 1
+			"enemy2_idle.png", 1
 			);
 
+  sprites->boss_projectile =
+    game_new_sprite(context,
+			1,
+			"knife.png", 1
+			);
 
   return sprites;
 }
