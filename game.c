@@ -103,11 +103,15 @@ void game_new(BSJ_Game *game) {
 // Game logic to move a player left.
 void game_move_player_left(BSJ_Game *game)
 {
-  if (game->horizontal_velocity > 0)
+  if (game->is_player_charging)
+    game->horizontal_velocity = 0;
+  else if (game->horizontal_velocity > 0)
     game->horizontal_velocity -= 2 * game->horizontal_acceleration;
   else
     game->horizontal_velocity -= game->horizontal_acceleration;
+
   game->player_facing = -1;
+
   if(game->horizontal_velocity < game->max_horizontal_speed * -1) {
     game->horizontal_velocity = game->max_horizontal_speed * -1;
   }
@@ -116,7 +120,9 @@ void game_move_player_left(BSJ_Game *game)
 // Game logic to move a player right.
 void game_move_player_right(BSJ_Game *game)
 {
-  if (game->horizontal_velocity < 0)
+  if (game->is_player_charging)
+    game->horizontal_velocity = 0;
+  else if (game->horizontal_velocity < 0)
     game->horizontal_velocity += 2 * game->horizontal_acceleration;
   else
     game->horizontal_velocity += game->horizontal_acceleration;
@@ -129,8 +135,10 @@ void game_move_player_right(BSJ_Game *game)
 // Game logic for player jump.
 void game_player_jump(BSJ_Game *game)
 {
+  if (game->is_player_charging)
+    game->vertical_velocity = 0;
   // only jump on the ground or with double jump
-  if (game->player_y <= game->floor || game->double_jump) {
+  else if (game->player_y <= game->floor || game->double_jump) {
     if (game->player_y > game->floor)
       game->double_jump = false;
     else
