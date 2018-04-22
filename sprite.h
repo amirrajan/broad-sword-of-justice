@@ -24,6 +24,7 @@ typedef struct {
   BSJ_Sprite * player_idle;
   BSJ_Sprite * player_attack;
   BSJ_Sprite * player_charge;
+  BSJ_Sprite * player_block;
   BSJ_Sprite * boss_idle;
   BSJ_Sprite * boss_projectile;
 } BSJ_Sprites;

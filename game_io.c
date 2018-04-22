@@ -44,6 +44,15 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			    game->boss_facing);
 
   game_draw_sprite_or_reset(context,
+			    sprites->player_block,
+			    game->is_player_blocking,
+			    game->player_x,
+			    game->player_y,
+			    sprites->player_block->w,
+			    sprites->player_block->h,
+			    game->player_facing);
+
+  game_draw_sprite_or_reset(context,
 			    sprites->player_charge,
 			    game->is_player_charging && !game->is_player_attacking,
 			    game->player_x,
@@ -63,7 +72,7 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 
   game_draw_sprite_or_reset(context,
 			    sprites->player_idle,
-			    !game->is_player_attacking && !game->is_player_charging,
+			    !game->is_player_attacking && !game->is_player_charging && !game->is_player_blocking,
 			    game->player_x,
 			    game->player_y,
 			    sprites->player_idle->w,

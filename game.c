@@ -5,12 +5,19 @@
 
 #include <chipmunk.h>
 
-bool game_is_player_hit(BSJ_Game *game) {
+cpBB game_player_box(BSJ_Game * game)
+{
   cpBB player_box;
   player_box.l = game->player_x;
   player_box.r = game->player_x + SPRITE_SIZE / 2.0;
   player_box.t = game->player_y;
   player_box.b = game->player_y - SPRITE_SIZE / 2.0;
+
+  return player_box;
+}
+
+bool game_is_player_hit_by_boss(BSJ_Game *game)
+{
 
   // check if the player is touching the boss
   cpBB boss_box;
@@ -19,9 +26,13 @@ bool game_is_player_hit(BSJ_Game *game) {
   boss_box.t = game->boss_y;
   boss_box.b = game->boss_y - SPRITE_SIZE / 2.0;
 
-  if ((bool)cpBBIntersects(player_box, boss_box)) { return true; };
+  return (bool)cpBBIntersects(game_player_box(game), boss_box);
+}
 
-  // check if the player is touching the projectiles
+BSJ_Projectile * game_is_player_hit_by_projectile(BSJ_Game *game)
+{
+  cpBB player_box = game_player_box(game);
+
   for (int i = 0; i < game->boss_projectile_count; i++) {
     BSJ_Projectile * projectile = game->boss_projectiles[i];
     if (!projectile->unused) {
@@ -30,15 +41,22 @@ bool game_is_player_hit(BSJ_Game *game) {
       projectile_box.r = projectile->x + projectile->w;
       projectile_box.t = projectile->y;
       projectile_box.b = projectile->y - projectile->h;
-      if ((bool)cpBBIntersects(player_box, projectile_box)) { return true; };
+      if ((bool)cpBBIntersects(player_box, projectile_box)) { return projectile; };
     }
   }
 
-  return false;
+  return NULL;
+}
+
+bool game_is_player_hit(BSJ_Game *game)
+{
+  return game_is_player_hit_by_boss(game) || game_is_player_hit_by_projectile(game) != NULL;
 }
 
 bool game_is_boss_hit(BSJ_Game *game) {
   if (!game->is_player_attacking) return false;
+
+  if (game->current_player_attack_frames > 2) return false;
 
   if (game->player_facing == 1 &&
       (game->boss_x - game->player_x) < 100 &&
@@ -116,12 +134,24 @@ void game_new(BSJ_Game *game) {
   game->is_player_charging = false;
   game->current_charging_frames = 0;
   game->max_charging_frames = 240;
+
+  // blocking specifications
+  game->is_player_blocking = false;
+  game->max_blocked_hits = 3;
+  game->current_blocked_hits = 0;
+}
+
+bool game_can_player_move(BSJ_Game *game)
+{
+  return !game->is_player_charging &&
+         !game->is_player_blocking &&
+         !game->is_player_attacking;
 }
 
 // Game logic to move a player left.
 void game_move_player_left(BSJ_Game *game)
 {
-  if (game->is_player_charging)
+  if (!game_can_player_move(game))
     game->horizontal_velocity *= 0.9;
   else if (game->horizontal_velocity > 0)
     game->horizontal_velocity -= 2 * game->horizontal_acceleration;
@@ -138,7 +168,7 @@ void game_move_player_left(BSJ_Game *game)
 // Game logic to move a player right.
 void game_move_player_right(BSJ_Game *game)
 {
-  if (game->is_player_charging)
+  if (!game_can_player_move(game))
     game->horizontal_velocity *= 0.9;
   else if (game->horizontal_velocity < 0)
     game->horizontal_velocity += 2 * game->horizontal_acceleration;
@@ -153,7 +183,7 @@ void game_move_player_right(BSJ_Game *game)
 // Game logic for player jump.
 void game_player_jump(BSJ_Game *game)
 {
-  if (game->is_player_charging)
+  if (!game_can_player_move(game))
     game->vertical_velocity = 0;
   // only jump on the ground or with double jump
   else if (game->player_y <= game->floor || game->double_jump) {
@@ -226,16 +256,33 @@ void game_tick_attack(BSJ_Game *game)
   }
 }
 
+void game_player_attempt_block(BSJ_Game *game)
+{
+  game->is_player_blocking = true;
+}
+
+void game_player_clear_block(BSJ_Game *game)
+{
+  game->is_player_blocking = false;
+  game->current_blocked_hits = 0;
+}
+
 void game_tick_buttons(BSJ_Game *game)
 {
   if (game->buttons[B_LEFT]) { game_move_player_left(game); }
   if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
   if (game->buttons[B_JUMP] == BS_PRESS) { game_player_jump(game); }
-  if (game->buttons[B_ATTACK] == BS_PRESS || game->buttons[B_ATTACK] == BS_HOLD) {
+  if (game->buttons[B_ATTACK]) {
     game_player_attempt_charge(game);
     game_player_attempt_attack(game);
   } else {
     game_player_clear_charge(game);
+  }
+
+  if (game->buttons[B_BLOCK]) {
+    game_player_attempt_block(game);
+  } else {
+    game_player_clear_block(game);
   }
 }
 
@@ -288,14 +335,17 @@ void game_reset(BSJ_Game *game) {
   }
 }
 
-void game_block_inputs(BSJ_Game *game)
-{
-
-}
-
 void game_process_blocks(BSJ_Game *game)
 {
+  if (!game->is_player_blocking) return;
+  if (game->current_blocked_hits >= game->max_blocked_hits) return;
 
+  BSJ_Projectile * projectile = game_is_player_hit_by_projectile(game);
+
+  if (projectile == NULL) return;
+
+  projectile->unused = true;
+  game->current_blocked_hits++;
 }
 
 void game_tick_vertical_velocity(BSJ_Game *game)
@@ -320,6 +370,8 @@ void game_tick_vertical_velocity(BSJ_Game *game)
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game)
 {
+  game_process_blocks(game);
+
   if(game_is_player_hit(game)) {
     game_reset(game);
   }

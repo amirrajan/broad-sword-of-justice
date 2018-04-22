@@ -74,6 +74,9 @@ typedef struct {
   bool can_player_attack;
   int current_charging_frames;
   int max_charging_frames;
+  bool is_player_blocking;
+  int max_blocked_hits;
+  int current_blocked_hits;
 } BSJ_Game;
 
 // Headless representation of a point.
