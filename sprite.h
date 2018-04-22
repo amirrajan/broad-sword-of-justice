@@ -15,6 +15,8 @@ typedef struct {
   int current_index;
   int current_duration;
   int count;
+  int w;
+  int h;
 } BSJ_Sprite;
 
 // Structure that holds all the sprites in the game.
@@ -30,7 +32,10 @@ typedef struct {
 // filename, frame duration pairs, the pair count MUST match the
 // second parameter. I REPEAT, IT MUST MATCH OR HORRIBLE SEG FAULTS
 // WILL HAPPEN.
-BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...);
+BSJ_Sprite * game_new_sprite(SDL_Context * context,
+			     int w,
+			     int h,
+			     int number_of_textures, ...);
 
 void game_increment_sprite(BSJ_Sprite * sprite);
 

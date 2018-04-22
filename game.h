@@ -5,9 +5,11 @@
 
 #define TIME_PER_TICK 16
 
-#define SPRITE_SIZE  128
+#define SPRITE_SIZE  64
+#define WORLD_LEFT   SPRITE_SIZE / 2
+#define WORLD_RIGHT  1024 - SPRITE_SIZE / 2
 #define WORLD_HEIGHT 768
-#define WORLD_WIDTH  1024
+#define WORLD_WIDTH  1024 - WORLD_LEFT - WORLD_RIGHT
 
 typedef enum {
   BS_NONE,

@@ -25,23 +25,25 @@ SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * su
 }
 
 // Helper method to take a sprite, and render it onto the scene at a specific location.
-void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, BSJ_Point point, double angle, SDL_RendererFlip flip)
+void render_texture(SDL_Renderer * renderer,
+		    SDL_Texture * texture,
+		    BSJ_Point point,
+		    int w,
+		    int h,
+		    double angle,
+		    SDL_RendererFlip flip)
 {
   SDL_Rect destrect;
-  destrect.x = point.x - 64;
-  destrect.y = point.y - 64;
-  destrect.w = 256;
-  destrect.h = 256;
+  destrect.x = point.x - w/2;
+  destrect.y = point.y - h/2;
+  destrect.w = w;
+  destrect.h = h;
 
   SDL_Rect cliprect;
   cliprect.x = 0;
   cliprect.y = 0;
-  cliprect.w = 128;
-  cliprect.h = 128;
+  cliprect.w = w;
+  cliprect.h = h;
 
-  SDL_Point center;
-  center.x = 0;
-  center.y = 0;
-
-  SDL_RenderCopyEx(renderer, texture, &cliprect, &destrect, angle, &center, flip);
+  SDL_RenderCopyEx(renderer, texture, &cliprect, &destrect, angle, NULL, flip);
 }

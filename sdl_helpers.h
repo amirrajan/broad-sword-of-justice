@@ -23,6 +23,12 @@ SDL_Context * game_new_sdl_context();
 SDL_Texture * create_texture_from_file(SDL_Renderer * renderer, SDL_Surface * surface, char* file_name);
 
 // Helper method to take a sprite, and render it onto the scene at a specific location.
-void render_texture(SDL_Renderer * renderer, SDL_Texture * texture, BSJ_Point point, double angle, SDL_RendererFlip flip);
+void render_texture(SDL_Renderer * renderer,
+		    SDL_Texture * texture,
+		    BSJ_Point point,
+		    int w,
+		    int h,
+		    double angle,
+		    SDL_RendererFlip flip);
 
 #endif // SDL_helpers_h

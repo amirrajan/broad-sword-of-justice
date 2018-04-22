@@ -10,13 +10,18 @@
 // filename, frame duration pairs, the pair count MUST match the
 // second parameter. I REPEAT, IT MUST MATCH OR HORRIBLE SEG FAULTS
 // WILL HAPPEN.
-BSJ_Sprite * game_new_sprite(SDL_Context * context, int number_of_textures, ...)
+BSJ_Sprite * game_new_sprite(SDL_Context * context,
+			     int w,
+			     int h,
+			     int number_of_textures, ...)
 {
   MALLOC(BSJ_Sprite, sprite);
   sprite->texture_tuples = MALLOCSA(IntOfSDL_Texture, number_of_textures);
   sprite->current_index = 0;
   sprite->current_duration = 0;
   sprite->count = number_of_textures;
+  sprite->w = w;
+  sprite->h = w;
 
   for (int index = 0; index < number_of_textures; index++) {
     sprite->texture_tuples[index] = MALLOCA(IntOfSDL_Texture);
@@ -79,7 +84,7 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
   // second parameter. I REPEAT, IT MUST MATCH OR HORRIBLE SEG FAULTS
   // WILL HAPPEN.
   sprites->player_idle =
-    game_new_sprite(context,
+    game_new_sprite(context, 128, 128,
 			1,                    // number of sprites that represent this animation
 			"player_idle.png", 1  // filename plus duration
 			);
@@ -88,7 +93,7 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
   // game->max_player_attack_frames = 18;
   // if the sum of the durations, don't match up to to the max_player_attack_frames, then things will look weird.
   sprites->player_attack =
-    game_new_sprite(context,
+    game_new_sprite(context, 128, 128,
 			4,                        // number of sprites that represent this animation
 		        "player_attack1.png", 3,  // filename plus duration
 			"player_attack2.png", 3,  // filename plus duration
@@ -97,13 +102,13 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			);
 
   sprites->boss_idle =
-    game_new_sprite(context,
+    game_new_sprite(context, 128, 128,
 			1,
 			"enemy2_idle.png", 1
 			);
 
   sprites->boss_projectile =
-    game_new_sprite(context,
+    game_new_sprite(context, 14, 3,
 			1,
 			"knife.png", 1
 			);

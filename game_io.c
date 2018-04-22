@@ -8,12 +8,21 @@
 
 // Given a sprite, a predicate for reset, x, y, and facing. Draw the sprite on the screen for its given animation step.
 // If the `draw_if` predicate is false, reset the sprite.
-void game_draw_sprite_or_reset(SDL_Context *context, BSJ_Sprite *sprite, bool draw_if, int x, int y, int facing)
+void game_draw_sprite_or_reset(SDL_Context *context,
+			       BSJ_Sprite *sprite,
+			       bool draw_if,
+			       int x,
+			       int y,
+			       int w,
+			       int h,
+			       int facing)
 {
   if (draw_if) {
     render_texture(context->renderer,
 		   sprite->texture_tuples[sprite->current_index]->texture,
 		   location_in_camera(x, y),
+		   w,
+		   h,
 		   0,
 		   facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
     game_increment_sprite(sprite);
@@ -30,6 +39,8 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			    true,
 			    game->boss_x,
 			    game->boss_y,
+			    sprites->boss_idle->w,
+			    sprites->boss_idle->h,
 			    game->boss_facing);
 
   game_draw_sprite_or_reset(context,
@@ -37,6 +48,8 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			    game->is_player_attacking,
 			    game->player_x,
 			    game->player_y,
+			    sprites->player_attack->w,
+			    sprites->player_attack->h,
 			    game->player_facing);
 
   game_draw_sprite_or_reset(context,
@@ -44,6 +57,8 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			    !game->is_player_attacking,
 			    game->player_x,
 			    game->player_y,
+			    sprites->player_idle->w,
+			    sprites->player_idle->h,
 			    game->player_facing);
 
   for (int i = 0; i < game->boss_projectile_count; i++) {
@@ -52,6 +67,8 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			      !game->boss_projectiles[i]->unused,
 			      game->boss_projectiles[i]->x,
 			      game->boss_projectiles[i]->y,
+			      sprites->boss_projectile->w,
+			      sprites->boss_projectile->h,
 			      game->boss_facing);
   }
 

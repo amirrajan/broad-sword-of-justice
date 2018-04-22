@@ -31,7 +31,7 @@ void game_new(BSJ_Game *game) {
   game->player_x = 0;
   game->player_y = 800;
   game->player_facing = 1;
-  game->boss_x = 700;
+  game->boss_x = WORLD_RIGHT;
   game->boss_y = 0;
   game->boss_facing = -1;
   // how quickly the player is moving horizontally (negative value means left, positive value means right).
@@ -58,8 +58,8 @@ void game_new(BSJ_Game *game) {
   for (int i = 0; i < NUMBEROFBUTTONS; i++)
     game->buttons[i] = BS_NONE;
   // definition of the edges of the world
-  game->left_edge = 0;
-  game->right_edge = WORLD_WIDTH - SPRITE_SIZE;
+  game->left_edge = WORLD_LEFT;
+  game->right_edge = WORLD_RIGHT;
   // attack frame definitions
   game->is_player_attacking = false;
   // number of frames the attack lasts
