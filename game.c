@@ -74,7 +74,13 @@ bool game_is_boss_hit(BSJ_Game *game) {
 }
 
 // Initialization of the game.
-void game_new(BSJ_Game *game) {
+int game_new(BSJ_Game *game) {
+  // load sounds
+  game->sounds = MALLOCA(BSJ_Sounds);
+  if (sound_init(game->sounds) != 0)
+    return 1;
+  music_play(game->sounds->music_boss_alley);
+
   // frames per second.
   game->timestep = 1000. / 60.;
   // where the floor is located.
@@ -139,6 +145,8 @@ void game_new(BSJ_Game *game) {
   game->is_player_blocking = false;
   game->max_blocked_hits = 3;
   game->current_blocked_hits = 0;
+
+  return 0;
 }
 
 bool game_can_player_move(BSJ_Game *game)
@@ -193,6 +201,8 @@ void game_player_jump(BSJ_Game *game)
       game->double_jump = true;
     game->vertical_velocity = game->jump_power;
     game->jump_hold_frames = game->max_jump_hold_frames;
+
+    sound_play(game->sounds->sound_jump);
   }
 }
 
@@ -373,6 +383,7 @@ void game_tick(BSJ_Game *game)
   game_process_blocks(game);
 
   if(game_is_player_hit(game)) {
+    sound_play(game->sounds->sound_hurt0);
     game_reset(game);
   }
 
@@ -388,4 +399,8 @@ void game_tick(BSJ_Game *game)
   game_tick_boss(game);
   game_tick_boss_projectiles(game);
 
+}
+
+void game_clean_up(BSJ_Game *game) {
+  sound_clean_up(game->sounds);
 }

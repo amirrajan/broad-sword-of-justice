@@ -26,19 +26,12 @@ int main(int argc, char *argv[])
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO);
   TTF_Init();
 
-  // load support for the OGG
-  int initted = Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
-
-  Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
-
-  Mix_Music *music; music = Mix_LoadMUS("./enemy1_theme.ogg"); if(music == NULL) { printf("Unable to load Ogg file: %s\n", Mix_GetError()); return 1; }
-  if(Mix_PlayMusic(music, -1) == -1) { printf("Unable to play Ogg file: %s\n", Mix_GetError()); return 1; }
-
   SDL_Context * context = game_new_sdl_context();
   BSJ_Sprites * sprites = game_init_sprites(context);
 
   MALLOC(BSJ_Game, game);
-  game_new(game);
+  if (game_new(game) != 0)
+    return 1;
 
   SDL_RenderSetScale(context->renderer, 1, 1);
   SDL_SetRenderDrawColor(context->renderer, 0, 0, 0, 255);
@@ -61,6 +54,8 @@ int main(int argc, char *argv[])
 
     game_draw(context, sprites, game);
   }
+
+  game_clean_up(game);
 
   return 0;
 }

@@ -2,6 +2,7 @@
 #define game_h
 
 #include <stdbool.h>
+#include "sound.h"
 
 #define TIME_PER_TICK 16
 
@@ -42,6 +43,7 @@ typedef struct {
 
 // Headless representation of the game.
 typedef struct {
+  BSJ_Sounds *sounds;
   double timestep;
   double floor;
   double player_x;
@@ -89,7 +91,7 @@ typedef struct {
 double sign(double value);
 
 // Initialization of the game.
-void game_new(BSJ_Game *game);
+int game_new(BSJ_Game *game);
 
 // This converts a point from game coordinates to canvas coordinates.
 // The current resolution of the game is 1024x768 with sprites sized at 128 pixels.
@@ -97,5 +99,8 @@ BSJ_Point location_in_camera(int x, int y);
 
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game);
+
+// clean up resources in the game structure
+void game_clean_up(BSJ_Game *game);
 
 #endif // game_h

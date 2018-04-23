@@ -11,7 +11,8 @@ if(WIN32)
 	find_package(SDL2 REQUIRED)	
 	find_package(SDL2_image REQUIRED)
 	find_package(SDL2_ttf REQUIRED)
-	include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS})
+	find_package(SDL2_mixer REQUIRED)
+	include_directories(${SDL2_INCLUDE_DIR} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS})
 	
 	find_package(OpenGL REQUIRED)
 	
@@ -25,17 +26,22 @@ if(WIN32)
 	   main.c
 	   game.h
 	   game.c
-	   draw.h
-	   draw.c
+	   game_io.c
+	   game_io.h
+	   helper_functions.c
+	   helper_functions.h
 	   sprite.h
 	   sprite.c
 	   sdl_helpers.h
 	   sdl_helpers.c
+	   sound.h
+	   sound.c
+	   malloc_macros.c
 	)
 	
 	add_executable(${PROJECT_NAME} ${SOURCE})
 	target_link_libraries(${PROJECT_NAME}
-		${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${CHIPMUNK_LIBRARIES})
+		${SDL2_LIBRARY} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} ${CHIPMUNK_LIBRARIES})
 	
 else()
 	project(broad-sword-of-justice)
