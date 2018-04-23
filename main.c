@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
 
   Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 1024);
 
-  Mix_Music *music; music = Mix_LoadMUS("./enemy1_theme.ogg"); if(music == NULL) { printf("Unable to load Ogg file: %s\n", Mix_GetError()); return 1; }
-  if(Mix_PlayMusic(music, -1) == -1) { printf("Unable to play Ogg file: %s\n", Mix_GetError()); return 1; }
+  /* Mix_Music *music; music = Mix_LoadMUS("./enemy1_theme.ogg"); if(music == NULL) { printf("Unable to load Ogg file: %s\n", Mix_GetError()); return 1; } */
+  /* if(Mix_PlayMusic(music, -1) == -1) { printf("Unable to play Ogg file: %s\n", Mix_GetError()); return 1; } */
 
   SDL_Context * context = game_new_sdl_context();
   BSJ_Sprites * sprites = game_init_sprites(context);
