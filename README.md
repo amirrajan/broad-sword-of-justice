@@ -4,4 +4,10 @@ Clone the repo.
 
 ## On Mac
 
-Run `sh ./build_mac.sh` and pray.
+`brew install flac`
+`brew install libmikmod`
+`brew install libogg`
+`brew install libvorbis`
+`brew install smpeg`
+
+Run `sh ./build_mac.sh` and pray (you will be prompted for sudo access when installing the libraries).
