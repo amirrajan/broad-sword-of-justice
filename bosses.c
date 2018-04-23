@@ -3,19 +3,46 @@
 #include "malloc_macros.c"
 #include <stdlib.h>
 
+typedef enum {
+  none = 0,
+  straight_projectiles,
+  triple_shot_projectiles,
+  spray_projectiles
+} bossmetadatavalues;
+
+// you get 100 properties in the metadata, god speed
+typedef enum {
+  mode = 0,
+  current_projectiles,
+  max_projectiles,
+  count,
+  attack_cooldown,
+  max_attack_cooldown
+} bossmetadata;
+
+#define md(NAME) game->boss_metadata[NAME]
+
+void game_reset_boss(BSJ_Game *game) {
+  for (int i = 0; i < game->boss_projectile_count; i++) {
+    BSJ_Projectile * projectile = game->boss_projectiles[i];
+    projectile->unused = true;
+  }
+
+  md(current_projectiles) = 0;
+  md(max_projectiles) = 20;
+  md(mode) = straight_projectiles;
+  md(max_attack_cooldown) = (1 * 60) / 10;
+  md(attack_cooldown) = md(max_attack_cooldown);
+}
+
 void game_init_boss(BSJ_Game *game) {
   // allocate a pool of projectiles based on the size of `boss_projectile_count`
-  game->max_boss_attack_cooldown = (1 * 60) / 4;
-  game->boss_attack_cooldown = game->max_boss_attack_cooldown;
   game->boss_projectile_count = 100;
   game->boss_projectiles = MALLOCSA(BSJ_Projectile, game->boss_projectile_count);
   for (int i = 0; i < game->boss_projectile_count; i++) {
-    // empty projectile
     game->boss_projectiles[i] = MALLOCA(BSJ_Projectile);
-    game->boss_projectiles[i]->unused = true;
   }
-  game->current_projectiles_for_boss = 0;
-  game->max_projectiles_for_boss = 10;
+  game_reset_boss(game);
 }
 
 int game_index_of_unused_projectile(BSJ_Game *game) {
@@ -26,14 +53,16 @@ int game_index_of_unused_projectile(BSJ_Game *game) {
   return -1;
 }
 
-void game_tick_boss(BSJ_Game *game)
-{
-  // knife throwing boss
-  game->boss_attack_cooldown -= 1;
-  if (game->boss_attack_cooldown > 0) { return; }
-  if (game->current_projectiles_for_boss >= game->max_projectiles_for_boss) {
-    return;
+void game_tick_boss_mode_1(BSJ_Game *game) {
+  if (md(current_projectiles) >= md(max_projectiles) &&
+      md(mode) == straight_projectiles) {
+    md(mode) = triple_shot_projectiles;
   }
+
+  if (md(mode) != straight_projectiles) { return; }
+
+  md(attack_cooldown) -= 1;
+  if (md(attack_cooldown) > 0) { return; }
 
   int unused_projectile_index = game_index_of_unused_projectile(game);
   if (unused_projectile_index == -1) { return; }
@@ -47,8 +76,21 @@ void game_tick_boss(BSJ_Game *game)
   projectile->speed = 10; // one pixel per frame
   projectile->angle = 3.14;
 
-  game->boss_attack_cooldown = game->max_boss_attack_cooldown;
-  game->current_projectiles_for_boss++;
+  md(current_projectiles) += 1;
+
+  md(attack_cooldown) = md(max_attack_cooldown);
+}
+
+void game_tick_boss_mode_2(BSJ_Game *game) {
+
+}
+
+void game_tick_boss(BSJ_Game *game)
+{
+  game_tick_boss_mode_1(game);
+  game_tick_boss_mode_2(game);
+
+  game_tick_boss_projectiles(game);
 }
 
 void game_tick_boss_projectiles(BSJ_Game *game)
@@ -58,10 +100,6 @@ void game_tick_boss_projectiles(BSJ_Game *game)
     if (!projectile->unused) { projectile->x -= projectile->speed; }
     if (projectile->x < -100) {
       projectile->unused = true;
-      game->current_projectiles_for_boss--;
-      if (game->current_projectiles_for_boss < 0) {
-	game->current_projectiles_for_boss = 0;
-      }
     }
   }
 }

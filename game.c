@@ -280,12 +280,7 @@ void game_tick_buttons(BSJ_Game *game)
 void game_reset(BSJ_Game *game) {
   game->player_x = 0;
   game->player_y = 800;
-
-  for (int i = 0; i < game->boss_projectile_count; i++) {
-    BSJ_Projectile * projectile = game->boss_projectiles[i];
-    projectile->unused = true;
-  }
-  game->current_projectiles_for_boss = 0;
+  game_reset_boss(game);
 }
 
 void game_process_blocks(BSJ_Game *game)
@@ -339,6 +334,4 @@ void game_tick(BSJ_Game *game)
   game_tick_horizontal_velocity(game);
   game_tick_vertical_velocity(game);
   game_tick_boss(game);
-  game_tick_boss_projectiles(game);
-
 }
