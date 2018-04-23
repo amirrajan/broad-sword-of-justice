@@ -36,6 +36,8 @@ if(WIN32)
 	   sdl_helpers.c
 	   sound.h
 	   sound.c
+	   bosses.h
+	   bosses.c
 	   malloc_macros.c
 	)
 	
