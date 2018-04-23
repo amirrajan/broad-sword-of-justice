@@ -18,15 +18,6 @@ if [ ! -f ./SDL_image/libSDL2_image.la ]; then
     popd
 fi
 
-if [ ! -f ./SDL_ttf/libSDL2_ttf.la ]; then
-    echo "SDL_ttf build output doesn't exist. BUILDING!!!"
-    pushd ./SDL_ttf
-    ./configure
-    make
-    sudo make install
-    popd
-fi
-
 if [[ ! -d ./SDL_mixer/build/ ]]; then
     echo "SDL_mixer build output doesn't exist. BUILDING!!!"
     pushd ./SDL_mixer
@@ -48,9 +39,8 @@ fi
 clang *.c -I./ \
       -I./SDL/include \
       -I./SDL_image \
-      -I./SDL_ttf \
       -I./SDL_mixer \
       -I./Chipmunk2D/include/chipmunk \
-      -o ./broad-sword-of-justice -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+      -o ./broad-sword-of-justice -lSDL2 -lSDL2_image -lSDL2_mixer
 
 echo "lit."

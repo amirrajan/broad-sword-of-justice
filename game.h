@@ -54,8 +54,6 @@ typedef struct {
   double boss_facing;
   int boss_projectile_count;
   BSJ_Projectile ** boss_projectiles;
-  int boss_attack_cooldown;
-  int max_boss_attack_cooldown;
   double horizontal_velocity;
   double vertical_velocity;
   double jump_power;
@@ -79,6 +77,7 @@ typedef struct {
   bool is_player_blocking;
   int max_blocked_hits;
   int current_blocked_hits;
+  int boss_metadata[100];
 } BSJ_Game;
 
 // Headless representation of a point.

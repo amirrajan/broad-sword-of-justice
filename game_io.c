@@ -4,7 +4,6 @@
 #include <SDL.h>
 #include <SDL_render.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
 
 // Given a sprite, a predicate for reset, x, y, and facing. Draw the sprite on the screen for its given animation step.
 // If the `draw_if` predicate is false, reset the sprite.
