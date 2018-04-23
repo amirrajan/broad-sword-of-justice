@@ -10,7 +10,6 @@ SDL_Context * game_new_sdl_context()
   o->window = SDL_CreateWindow("Game", 50, 50, 1024, 768, SDL_WINDOW_OPENGL);
   o->renderer = SDL_CreateRenderer(o->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   o->surface = MALLOCA(SDL_Surface);
-  o->font = TTF_OpenFont("PTS75F.ttf", 12);
   o->event = MALLOCA(SDL_Event);
   if (SDL_NumJoysticks() > 0) { o->joystick = SDL_JoystickOpen(0); }
   return o;

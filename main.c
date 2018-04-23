@@ -8,7 +8,6 @@
 #include <SDL.h>
 #include <SDL_render.h>
 #include <SDL_image.h>
-#include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include "malloc_macros.c"
 #include "helper_functions.h"
@@ -24,7 +23,6 @@ int main(int argc, char *argv[])
 {
   // Initialize all the things.
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK | SDL_INIT_AUDIO);
-  TTF_Init();
 
   // load support for the OGG
   int initted = Mix_Init(MIX_INIT_OGG | MIX_INIT_MP3);
