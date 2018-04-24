@@ -116,18 +116,22 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 
   sprites->player_charge =
     game_new_sprite(context, 128, 128,
-			11,                        
-		  "images/player_charge0.png", 10,
-      "images/player_charge1.png", 10,
-      "images/player_charge2.png", 10,
-      "images/player_charge3.png", 10,
-      "images/player_charge4.png", 10,
-      "images/player_charge5.png", 10,
-      "images/player_charge6.png", 10,
-      "images/player_charge7.png", 10,
-      "images/player_charge8.png", 10,
-      "images/player_charge9.png", 10,
-      "images/player_charge10.png", 10
+			15,                        
+		  "images/player_charge0.png", 20,
+      "images/player_charge1.png", 20,
+      "images/player_charge2.png", 20,
+      "images/player_charge3.png", 20,
+      "images/player_charge4.png", 20,
+      "images/player_charge5.png", 20,
+      "images/player_charge6.png", 20,
+      "images/player_charge7.png", 20,
+      "images/player_charge8.png", 20,
+      "images/player_charge9.png", 20,
+      "images/player_charge10.png", 20,
+      "images/player_charge9.png", 20,
+      "images/player_charge10.png", 20,
+      "images/player_charge9.png", 20,
+      "images/player_charge10.png", 20
 			);
 
   sprites->player_dash =

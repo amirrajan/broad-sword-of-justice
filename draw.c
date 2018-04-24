@@ -42,8 +42,8 @@ void draw_player(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   if (game->is_player_blocking) {
     game_draw_sprite_or_reset(context,
+      sprites->player_block,
       true,
-      game->is_player_blocking,
       game->player_x,
       game->player_y,
       sprites->player_block->w,
