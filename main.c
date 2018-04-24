@@ -14,7 +14,8 @@
 #include "game.h"
 #include "sdl_helpers.h"
 #include "sprite.h"
-#include "game_io.h"
+#include "draw.h"
+#include "input.h"
 
 #ifdef __cplusplus
   extern "C"

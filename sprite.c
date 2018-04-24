@@ -89,28 +89,57 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			"images/player_idle.png", 1  // filename plus duration
 			);
 
+  sprites->player_walk =
+    game_new_sprite(context, 128, 128,
+      2,
+      "images/player_walk1.png", 5,
+      "images/player_walk2.png", 5
+    );
+
+  sprites->player_jump =
+    game_new_sprite(context, 128, 128,
+      1,                    
+      "images/player_jump.png", 1  
+    );
+
   // the frame durations are closely tied to:
   // game->max_player_attack_frames = 18;
   // if the sum of the durations, don't match up to to the max_player_attack_frames, then things will look weird.
   sprites->player_attack =
     game_new_sprite(context, 128, 128,
-			4,                        // number of sprites that represent this animation
-		  "images/player_attack1.png", 3,  // filename plus duration
-			"images/player_attack2.png", 3,  // filename plus duration
-			"images/player_attack3.png", 3,  // filename plus duration
-			"images/player_attack4.png", 51  // filename plus duration
+			4,
+		  "images/player_attack1.png", 3,
+			"images/player_attack2.png", 3,
+			"images/player_attack3.png", 3,
+			"images/player_attack4.png", 51
 			);
 
   sprites->player_charge =
     game_new_sprite(context, 128, 128,
-			1,                        // number of sprites that represent this animation
-		        "images/player_charge.png", 1   // filename plus duration
+			11,                        
+		  "images/player_charge0.png", 10,
+      "images/player_charge1.png", 10,
+      "images/player_charge2.png", 10,
+      "images/player_charge3.png", 10,
+      "images/player_charge4.png", 10,
+      "images/player_charge5.png", 10,
+      "images/player_charge6.png", 10,
+      "images/player_charge7.png", 10,
+      "images/player_charge8.png", 10,
+      "images/player_charge9.png", 10,
+      "images/player_charge10.png", 10
 			);
+
+  sprites->player_dash =
+    game_new_sprite(context, 128, 128,
+      1,                        
+      "images/player_dash.png", 1   
+    );
 
   sprites->player_block =
     game_new_sprite(context, 128, 128,
-			1,                        // number of sprites that represent this animation
-		        "images/player_block.png", 1   // filename plus duration
+			1,                        
+		  "images/player_block.png", 1
 			);
 
   sprites->boss_idle =

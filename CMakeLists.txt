@@ -26,8 +26,10 @@ if(WIN32)
 	   main.c
 	   game.h
 	   game.c
-	   game_io.c
-	   game_io.h
+	   input.h
+	   input.c
+	   draw.h
+	   draw.c
 	   helper_functions.c
 	   helper_functions.h
 	   sprite.h
