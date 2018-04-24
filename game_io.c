@@ -31,6 +31,8 @@ void game_draw_sprite_or_reset(SDL_Context *context,
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
+  // draw the game on the a texture for resizing
+  SDL_SetRenderTarget(context->renderer, context->resizeTarget);
   SDL_RenderClear(context->renderer);
 
   game_draw_sprite_or_reset(context,
@@ -89,6 +91,14 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			      game->boss_facing);
   }
 
+  // reset the render target and draw the texture at scale
+  SDL_SetRenderTarget(context->renderer, NULL);
+  SDL_RenderClear(context->renderer);
+  SDL_Rect destrect;
+  SDL_RenderGetViewport(context->renderer, &destrect);
+  destrect.x = 0;
+  destrect.y = 0;
+  SDL_RenderCopyEx(context->renderer, context->resizeTarget, NULL, &destrect, 0, NULL, SDL_FLIP_NONE);
 
   SDL_RenderPresent(context->renderer);
 }

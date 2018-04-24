@@ -7,8 +7,15 @@
 SDL_Context * game_new_sdl_context()
 {
   MALLOC(SDL_Context, o);
-  o->window = SDL_CreateWindow("Game", 50, 50, 1024, 768, SDL_WINDOW_OPENGL);
+
+  o->window = SDL_CreateWindow("Broadsword of Justice",
+    SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+    GAME_WIDTH * 2, GAME_HEIGHT * 2,
+    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE); //| SDL_WINDOW_FULLSCREEN_DESKTOP);
+
   o->renderer = SDL_CreateRenderer(o->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  o->resizeTarget = SDL_CreateTexture(o->renderer, SDL_PIXELFORMAT_RGBA8888,
+    SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
   o->surface = MALLOCA(SDL_Surface);
   o->event = MALLOCA(SDL_Event);
   if (SDL_NumJoysticks() > 0) { o->joystick = SDL_JoystickOpen(0); }
