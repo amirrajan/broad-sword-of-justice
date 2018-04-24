@@ -21,7 +21,7 @@ BSJ_Sprite * game_new_sprite(SDL_Context * context,
   sprite->current_duration = 0;
   sprite->count = number_of_textures;
   sprite->w = w;
-  sprite->h = w;
+  sprite->h = h;
 
   for (int index = 0; index < number_of_textures; index++) {
     sprite->texture_tuples[index] = MALLOCA(IntOfSDL_Texture);
@@ -95,7 +95,7 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
   sprites->player_attack =
     game_new_sprite(context, 128, 128,
 			4,                        // number of sprites that represent this animation
-		        "player_attack1.png", 3,  // filename plus duration
+		  "player_attack1.png", 3,  // filename plus duration
 			"player_attack2.png", 3,  // filename plus duration
 			"player_attack3.png", 3,  // filename plus duration
 			"player_attack4.png", 51  // filename plus duration
@@ -124,6 +124,17 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			1,
 			"knife.png", 1
 			);
+
+  sprites->bg_1 =
+    game_new_sprite(context, 384, 220,
+      1,
+      "bg_1.png", 1
+    );
+  sprites->bg_2 =
+    game_new_sprite(context, 384, 220,
+      1,
+      "bg_2.png", 1
+    );
 
   return sprites;
 }

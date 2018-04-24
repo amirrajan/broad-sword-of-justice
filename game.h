@@ -6,12 +6,13 @@
 
 #define TIME_PER_TICK 16
 
-#define GAME_WIDTH 384 //1024
-#define GAME_HEIGHT 224 //768
-#define SPRITE_SIZE  64
-#define WORLD_LEFT   SPRITE_SIZE / 2
-#define WORLD_RIGHT  GAME_WIDTH - SPRITE_SIZE / 2
-#define WORLD_HEIGHT GAME_HEIGHT
+#define GAME_WIDTH 384
+#define GAME_HEIGHT 220
+#define FLOOR_OFFSET  32
+#define SPRITE_SIZE 32
+#define WORLD_LEFT   FLOOR_OFFSET / 2
+#define WORLD_RIGHT  GAME_WIDTH - FLOOR_OFFSET / 2
+#define WORLD_HEIGHT GAME_HEIGHT - FLOOR_OFFSET
 #define WORLD_WIDTH  GAME_WIDTH - WORLD_LEFT - WORLD_RIGHT
 
 
@@ -48,16 +49,15 @@ typedef struct {
 // Headless representation of the game.
 typedef struct {
   BSJ_Sounds *sounds;
+  
   double timestep;
+  int level;
+
   double floor;
+
   double player_x;
   double player_y;
   double player_facing;
-  double boss_x;
-  double boss_y;
-  double boss_facing;
-  int boss_projectile_count;
-  BSJ_Projectile ** boss_projectiles;
   double horizontal_velocity;
   double vertical_velocity;
   double jump_power;
@@ -69,6 +69,13 @@ typedef struct {
   double friction;
   int jump_hold_frames;
   buttonstate buttons[NUMBEROFBUTTONS];
+
+  double boss_x;
+  double boss_y;
+  double boss_facing;
+  int boss_projectile_count;
+  BSJ_Projectile ** boss_projectiles;
+
   double left_edge;
   double right_edge;
   bool is_player_attacking;

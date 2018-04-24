@@ -36,6 +36,24 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   SDL_RenderClear(context->renderer);
 
   game_draw_sprite_or_reset(context,
+          sprites->bg_1,
+          game->level == 1,
+          sprites->bg_1->w / 2,
+          sprites->bg_1->h / 2 - FLOOR_OFFSET,
+          sprites->bg_1->w,
+          sprites->bg_1->h,
+          false);
+
+  game_draw_sprite_or_reset(context,
+          sprites->bg_2,
+          game->level == 2,
+          sprites->bg_2->w / 2,
+          sprites->bg_2->h / 2 - FLOOR_OFFSET,
+          sprites->bg_2->w,
+          sprites->bg_2->h,
+          false);
+
+  game_draw_sprite_or_reset(context,
 			    sprites->boss_idle,
 			    true,
 			    game->boss_x,

@@ -81,33 +81,36 @@ int game_new(BSJ_Game *game) {
     return 1;
   music_play(game->sounds->music_boss_alley);
 
+  // what level we are on (zero is menu)
+  game->level = 1;
+
   // frames per second.
   game->timestep = 1000. / 60.;
   // where the floor is located.
   game->floor = 0;
   // current position of player.
   game->player_x = 0;
-  game->player_y = 800;
+  game->player_y = 200;
   game->player_facing = 1;
   game->boss_x = WORLD_RIGHT;
-  game->boss_y = 0;
+  game->boss_y = SPRITE_SIZE / 2;
   game->boss_facing = -1;
   // how quickly the player is moving horizontally (negative value means left, positive value means right).
   game->horizontal_velocity = 0;
   // how quickly the player is moving vertically (the floor is at 0, a negative value here means they are above the floor).
   game->vertical_velocity = 0;
   // the initial power of the jump.
-  game->jump_power = 10;
+  game->jump_power = 4;
   // how many frames that initial jump power is sustained before gravity takes over.
-  game->max_jump_hold_frames = 12;
+  game->max_jump_hold_frames = 16;
   // if double-jump is available
   game->double_jump = false;
   // gravity.
-  game->gravity = 10;
+  game->gravity = 6;
   // how quickly the player will stop moving horizontally.
   game->friction = 1.5;
   // top speed of player.
-  game->max_horizontal_speed = 10;
+  game->max_horizontal_speed = 4;
   // how quickly the player increases to their top speed.
   game->horizontal_acceleration = 0.5;
   // this represents the number of frames that jump has been held for (relates to max_jump_hold_frames).
@@ -152,13 +155,8 @@ void game_move_player_left(BSJ_Game *game)
 {
   if (!game_can_player_move(game))
     game->horizontal_velocity *= 0.9;
-  else if (game->horizontal_velocity > 0)
-    game->horizontal_velocity -= 2 * game->horizontal_acceleration;
-  else
-    game->horizontal_velocity -= game->horizontal_acceleration;
-
+  game->horizontal_velocity -= game->max_horizontal_speed / 2;
   game->player_facing = -1;
-
   if(game->horizontal_velocity < game->max_horizontal_speed * -1) {
     game->horizontal_velocity = game->max_horizontal_speed * -1;
   }
@@ -169,10 +167,7 @@ void game_move_player_right(BSJ_Game *game)
 {
   if (!game_can_player_move(game))
     game->horizontal_velocity *= 0.9;
-  else if (game->horizontal_velocity < 0)
-    game->horizontal_velocity += 2 * game->horizontal_acceleration;
-  else
-    game->horizontal_velocity += game->horizontal_acceleration;
+  game->horizontal_velocity += game->max_horizontal_speed / 2;
   game->player_facing = 1;
   if(game->horizontal_velocity > game->max_horizontal_speed) {
     game->horizontal_velocity = game->max_horizontal_speed;
@@ -185,8 +180,8 @@ void game_player_jump(BSJ_Game *game)
   if (!game_can_player_move(game))
     game->vertical_velocity = 0;
   // only jump on the ground or with double jump
-  else if (game->player_y <= game->floor || game->double_jump) {
-    if (game->player_y > game->floor)
+  else if (game->player_y <= game->floor + SPRITE_SIZE / 2 || game->double_jump) {
+    if (game->player_y > game->floor + SPRITE_SIZE / 2)
       game->double_jump = false;
     else
       game->double_jump = true;
@@ -221,12 +216,11 @@ void game_player_attempt_charge(BSJ_Game *game) {
 }
 
 // This converts a point from game coordinates to canvas coordinates.
-// The current resolution of the game is 1024x768 with sprites sized at 128 pixels.
 BSJ_Point location_in_camera(int x, int y)
 {
   BSJ_Point result;
   result.x = x;
-  result.y = WORLD_HEIGHT - SPRITE_SIZE - y;
+  result.y = WORLD_HEIGHT - y;
   return result;
 }
 
@@ -317,11 +311,11 @@ void game_tick_vertical_velocity(BSJ_Game *game)
   }
 
   // stop at floor
-  if (game->player_y > game->floor) {
+  if (game->player_y - SPRITE_SIZE / 2 > game->floor) {
     game->vertical_velocity -= game->gravity / game->timestep;
   } else {
     game->vertical_velocity = 0;
-    game->player_y = game->floor;
+    game->player_y = game->floor + SPRITE_SIZE / 2;
   }
 }
 

@@ -27,6 +27,9 @@ typedef struct {
   BSJ_Sprite * player_block;
   BSJ_Sprite * boss_idle;
   BSJ_Sprite * boss_projectile;
+
+  BSJ_Sprite * bg_1;
+  BSJ_Sprite * bg_2;
 } BSJ_Sprites;
 
 // using game_new_bsj_sprite first parameter is the context second

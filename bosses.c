@@ -37,7 +37,7 @@ void game_reset_boss(BSJ_Game *game) {
   }
 
   mde(current_projectiles, 0);
-  mde(max_projectiles, 20);
+  mde(max_projectiles, 10);
   mde(mode, none);
   mde(next_mode, straight_projectiles);
   mde(next_mode_countdown, 60 * 3);
@@ -80,7 +80,7 @@ void game_queue_projectile_s_dx_dy(BSJ_Game *game, int speed, double dx, double 
 
   BSJ_Projectile * projectile = game->boss_projectiles[unused_projectile_index];
   projectile->unused = false;
-  projectile->x = game->boss_x - SPRITE_SIZE / 4;
+  projectile->x = game->boss_x - FLOOR_OFFSET / 4;
   projectile->y = game->boss_y;
   projectile->w = 7;
   projectile->h = 1;
@@ -110,7 +110,7 @@ void game_tick_boss_mode_1(BSJ_Game *game) {
 
   if (md(current_attack_cooldown) > 0) { return; }
 
-  game_queue_projectile_s(game, 10);
+  game_queue_projectile_s(game, 7);
 
   mde(current_attack_cooldown, md(max_attack_cooldown));
 }
