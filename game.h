@@ -40,7 +40,8 @@ typedef struct {
   double w;
   double h;
   double speed;
-  double angle;
+  double dx;
+  double dy;
   bool unused;
 } BSJ_Projectile;
 

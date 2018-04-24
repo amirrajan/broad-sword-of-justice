@@ -19,7 +19,6 @@ cpBB game_player_box(BSJ_Game * game)
 
 bool game_is_player_hit_by_boss(BSJ_Game *game)
 {
-
   // check if the player is touching the boss
   cpBB boss_box;
   boss_box.l = game->boss_x;
