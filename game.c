@@ -82,7 +82,7 @@ int game_new(BSJ_Game *game) {
   music_play(game->sounds->music_boss_alley);
 
   // what level we are on (zero is menu)
-  game->level = 1;
+  game->level = 2;
 
   // frames per second.
   game->timestep = 1000. / 60.;

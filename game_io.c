@@ -109,6 +109,15 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			      game->boss_facing);
   }
 
+  game_draw_sprite_or_reset(context,
+    sprites->bg_2_foreground,
+    game->level == 2,
+    sprites->bg_2_foreground->w / 2,
+    sprites->bg_2_foreground->h / 2 - FLOOR_OFFSET,
+    sprites->bg_2_foreground->w,
+    sprites->bg_2_foreground->h,
+    false);
+
   // reset the render target and draw the texture at scale
   SDL_SetRenderTarget(context->renderer, NULL);
   SDL_RenderClear(context->renderer);

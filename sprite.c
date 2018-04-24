@@ -132,8 +132,24 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
     );
   sprites->bg_2 =
     game_new_sprite(context, 384, 220,
+      12,
+      "images/bg_2_0000.png", 5,
+      "images/bg_2_0001.png", 5,
+      "images/bg_2_0002.png", 5,
+      "images/bg_2_0003.png", 5,
+      "images/bg_2_0004.png", 5,
+      "images/bg_2_0005.png", 5,
+      "images/bg_2_0006.png", 5,
+      "images/bg_2_0007.png", 5,
+      "images/bg_2_0008.png", 5,
+      "images/bg_2_0009.png", 5,
+      "images/bg_2_0010.png", 5,
+      "images/bg_2_0011.png", 5
+    );
+  sprites->bg_2_foreground =
+    game_new_sprite(context, 384, 220,
       1,
-      "images/bg_2.png", 1
+      "images/bg_2_foreground.png", 1
     );
 
   return sprites;
