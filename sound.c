@@ -21,7 +21,8 @@ int sound_init(BSJ_Sounds *sounds) {
   BSJ_TryLoadMusic(justice);
   BSJ_TryLoadMusic(justice_lite);
   BSJ_TryLoadMusic(justice_loop);
-
+    
+    BSJ_TryLoadMusic(justice_death);
   BSJ_TryLoadSound(dodge);
   BSJ_TryLoadSound(gunshot);
   BSJ_TryLoadSound(hurt0);
@@ -58,6 +59,7 @@ void sound_clean_up(BSJ_Sounds *sounds) {
   Mix_FreeMusic(sounds->music_justice_lite);
   Mix_FreeMusic(sounds->music_justice_loop);
 
+    Mix_FreeChunk(sounds->sound_justice_death);
   Mix_FreeChunk(sounds->sound_dodge);
   Mix_FreeChunk(sounds->sound_gunshot);
   Mix_FreeChunk(sounds->sound_hurt0);
