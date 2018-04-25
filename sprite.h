@@ -31,6 +31,7 @@ typedef struct {
   BSJ_Sprite * player_stone;
   BSJ_Sprite * boss_idle;
   BSJ_Sprite * boss_projectile;
+  BSJ_Sprite * boss_attack;
   BSJ_Sprite * win_bg_1;
   BSJ_Sprite * flash;
   BSJ_Sprite * bg_1;

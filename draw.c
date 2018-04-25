@@ -132,11 +132,20 @@ void draw_boss(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   game_draw_sprite_or_reset(context,
     sprites->boss_idle,
-    true,
+    !game->is_boss_attacking,
     game->boss_x,
     game->boss_y,
     sprites->boss_idle->w,
     sprites->boss_idle->h,
+    game->boss_facing);
+
+  game_draw_sprite_or_reset(context,
+    sprites->boss_attack,
+    game->is_boss_attacking,
+    game->boss_x,
+    game->boss_y,
+    sprites->boss_attack->w,
+    sprites->boss_attack->h,
     game->boss_facing);
 
   for (int i = 0; i < game->boss_projectile_count; i++) {

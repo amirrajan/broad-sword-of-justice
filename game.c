@@ -160,8 +160,11 @@ bool game_can_player_move(BSJ_Game *game)
 // Game logic to move a player left.
 void game_move_player_left(BSJ_Game *game)
 {
-  if (!game_can_player_move(game))
+  if (!game_can_player_move(game)) {
     game->horizontal_velocity *= 0.9;
+    return;
+  }
+
   game->horizontal_velocity -= game->max_horizontal_speed / 2;
   game->player_facing = -1;
   if(game->horizontal_velocity < game->max_horizontal_speed * -1) {
@@ -172,8 +175,11 @@ void game_move_player_left(BSJ_Game *game)
 // Game logic to move a player right.
 void game_move_player_right(BSJ_Game *game)
 {
-  if (!game_can_player_move(game))
+  if (!game_can_player_move(game)) {
     game->horizontal_velocity *= 0.9;
+    return;
+  }
+
   game->horizontal_velocity += game->max_horizontal_speed / 2;
   game->player_facing = 1;
   if(game->horizontal_velocity > game->max_horizontal_speed) {
@@ -216,9 +222,12 @@ void game_player_clear_charge(BSJ_Game *game) {
 }
 
 void game_player_attempt_charge(BSJ_Game *game) {
+  if (game->is_player_blocking) { return; }
+
   if(game->is_player_charging == false) {
     sound_play(game->sounds->sound_charge);
   }
+
   game->is_player_charging = true;
   game->current_charging_frames++;
   if (game->current_charging_frames > game->max_charging_frames) {

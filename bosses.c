@@ -36,6 +36,7 @@ void game_reset_boss(BSJ_Game *game) {
     projectile->unused = true;
   }
 
+  game->is_boss_attacking = false;
   mde(current_projectiles, 0);
   mde(max_projectiles, 10);
   mde(mode, none);
@@ -110,6 +111,8 @@ void game_tick_boss_mode_1(BSJ_Game *game) {
 
   if (md(current_attack_cooldown) > 0) { return; }
 
+  game->is_boss_attacking = true;
+
   sound_play(game->sounds->sound_gunshot);
 
   game_queue_projectile_s(game, 7);
@@ -162,6 +165,7 @@ void game_tick_boss_mode_2(BSJ_Game *game)
       && md(previous_attack_cycles) == md(attack_cycles)) {
     mde(time_til_next_attack_cycle, 45);
     md(attack_cycles)++;
+    game->is_boss_attacking = false;
   }
 
   if (md(current_projectiles) < projectile_limit) {
@@ -173,6 +177,8 @@ void game_tick_boss_mode_2(BSJ_Game *game)
   if (md(current_attack_cooldown) > 0) { return; }
 
   if (md(current_projectiles) >= projectile_limit)  { return; }
+
+  game->is_boss_attacking = true;
 
   sound_play(game->sounds->sound_gunshot);
 
@@ -187,6 +193,7 @@ void game_tick_boss_determine_next_mode(BSJ_Game *game)
 {
   if (md(mode) == straight_projectiles &&
       md(current_projectiles) >= md(max_projectiles)) {
+    game->is_boss_attacking = false;
     mde(mode, none);
     mde(next_mode, triple_shot_projectiles);
     mde(next_mode_countdown, 60 * 2);
@@ -195,6 +202,7 @@ void game_tick_boss_determine_next_mode(BSJ_Game *game)
 
   if (md(mode) == triple_shot_projectiles &&
       md(attack_cycles) >= 10) {
+    game->is_boss_attacking = false;
     mde(mode, none);
     mde(next_mode, straight_projectiles);
     mde(next_mode_countdown, 60 * 6);

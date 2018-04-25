@@ -93,6 +93,7 @@ typedef struct {
   int max_charging_frames;
   bool is_player_blocking;
   bool game_over;
+  bool is_boss_attacking;
   int max_blocked_hits;
   int current_blocked_hits;
   int boss_metadata[100];
