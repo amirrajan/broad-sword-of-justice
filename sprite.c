@@ -148,15 +148,27 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 
   sprites->boss_idle =
     game_new_sprite(context, 128, 128,
-			1,
-			"images/enemy2_idle.png", 1
-			);
+            1,
+            "images/enemy2_idle.png", 1
+            );
 
   sprites->boss_projectile =
     game_new_sprite(context, 14, 3,
-			1,
-			"images/knife.png", 1
-			);
+            1,
+            "images/knife.png", 1
+            );
+    
+    sprites->boss_idle2 =
+    game_new_sprite(context, 128, 128,
+                    1,
+                    "images/enemy5_idle.png", 1
+                    );
+    
+    sprites->boss_projectile2 =
+    game_new_sprite(context, 14, 3,
+                    1,
+                    "images/bullet.png", 1
+                    );
 
   sprites->bg_1 =
     game_new_sprite(context, 384, 220,
