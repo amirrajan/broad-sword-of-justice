@@ -37,11 +37,13 @@ void render_texture(SDL_Renderer * renderer,
 		    int w,
 		    int h,
 		    double angle,
-		    SDL_RendererFlip flip)
+		    SDL_RendererFlip flip,
+		    double offset_x,
+		    double offset_y)
 {
   SDL_Rect destrect;
-  destrect.x = point.x - w/2;
-  destrect.y = point.y - h/2;
+  destrect.x = (point.x + offset_x) - w/2;
+  destrect.y = (point.y + offset_y) - h/2;
   destrect.w = w;
   destrect.h = h;
 

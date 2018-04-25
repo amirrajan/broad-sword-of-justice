@@ -2,6 +2,7 @@
 #include "bosses.h"
 #include "malloc_macros.c"
 #include <SDL.h>
+#include <math.h>
 #include <stdlib.h>
 
 #include <chipmunk.h>
@@ -145,6 +146,11 @@ int game_new(BSJ_Game *game) {
 
   game_init_boss(game);
 
+  game->camera_trauma = 0;
+  game->camera_x_offset = 0;
+  game->camera_y_offset = 0;
+  game->camera_angle = 0;
+
   game->game_over = false;
 
   return 0;
@@ -208,6 +214,7 @@ void game_player_jump(BSJ_Game *game)
 void game_player_attempt_attack(BSJ_Game *game) {
   if (!game->can_player_attack) { return; }
   if (game->is_player_attacking) { return; }
+  game->camera_trauma = 0;
   game->is_player_attacking = true;
   game->current_player_attack_frames = game->max_player_attack_frames;
 }
@@ -234,6 +241,16 @@ void game_player_attempt_charge(BSJ_Game *game) {
     game->can_player_attack = true;
     game->is_player_charging = false;
     game->current_charging_frames = 0;
+  } else {
+    if ((float)game->current_charging_frames / (float)game->max_charging_frames < 0.2) {
+      game->camera_trauma += 0.005;
+    }  else if ((float)game->current_charging_frames / (float)game->max_charging_frames < 0.5) {
+      game->camera_trauma += 0.01;
+    }  else if ((float)game->current_charging_frames / (float)game->max_charging_frames < 0.8) {
+      game->camera_trauma += 0.02;
+    }  else {
+      game->camera_trauma += 0.04;
+    }
   }
 }
 
@@ -307,12 +324,17 @@ void game_tick_buttons(BSJ_Game *game)
 
 void game_reset(BSJ_Game *game) {
   game->player_x = 0;
+  game->camera_trauma = 0;
   game->player_y = 200;
   game_player_clear_charge(game);
   game->jump_hold_frames = 0;
   game->is_player_blocking = false;
   game->max_blocked_hits = 3;
   game->current_blocked_hits = 0;
+  game->camera_trauma = 0;
+  game->camera_x_offset = 0;
+  game->camera_y_offset = 0;
+  game->camera_angle = 0;
   game_reset_boss(game);
 }
 
@@ -327,6 +349,45 @@ void game_process_blocks(BSJ_Game *game)
 
   projectile->unused = true;
   game->current_blocked_hits++;
+}
+
+double rand_double()
+{
+  return (double)rand() / (double)RAND_MAX;
+}
+
+void game_tick_camera_trauma(BSJ_Game *game)
+{
+  if (game->camera_trauma < 0.3) {
+    game->camera_x_offset = 0;
+    game->camera_y_offset = 0;
+    game->camera_angle = 0;
+    return;
+  }
+
+  double next_camera_angle = 180.0 / 15.0 * game->camera_trauma * game->camera_trauma;
+
+  if (game->camera_angle > 0) {
+    game->camera_angle = next_camera_angle * -1;
+  } else {
+    game->camera_angle = next_camera_angle;
+  }
+
+  double next_offset = 100.0 * game->camera_trauma * game->camera_trauma;
+
+  if (rand_double() >= 0.5) {
+    game->camera_x_offset = next_offset * rand_double();
+  } else {
+    game->camera_x_offset = next_offset * rand_double() * -1;
+  }
+
+  if (rand_double() >= 0.5) {
+    game->camera_y_offset = next_offset * rand_double();
+  } else {
+    game->camera_y_offset = next_offset * rand_double() * -1;
+  }
+
+  game->camera_trauma = game->camera_trauma * 0.95;
 }
 
 void game_tick_vertical_velocity(BSJ_Game *game)
@@ -411,6 +472,7 @@ void game_tick_scene_win(BSJ_Game *game)
 void game_tick(BSJ_Game *game)
 {
   game->frame_count += 1;
+  game_tick_camera_trauma(game);
   game_tick_scene_intro(game);
   game_tick_scene_boss(game);
   game_tick_scene_win(game);

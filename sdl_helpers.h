@@ -28,6 +28,8 @@ void render_texture(SDL_Renderer * renderer,
 		    int w,
 		    int h,
 		    double angle,
-		    SDL_RendererFlip flip);
+		    SDL_RendererFlip flip,
+		    double offset_x,
+		    double offset_y);
 
 #endif // SDL_helpers_h

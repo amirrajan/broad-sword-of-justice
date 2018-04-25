@@ -8,34 +8,46 @@
 void draw_level_bg(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   game_draw_sprite_or_reset(context,
-    sprites->bg_1,
-    game->level == 1,
-    sprites->bg_1->w / 2,
-    sprites->bg_1->h / 2 - FLOOR_OFFSET,
-    sprites->bg_1->w,
-    sprites->bg_1->h,
-    false);
+			    sprites->bg_1,
+			    game->level == 1,
+			    sprites->bg_1->w / 2,
+			    sprites->bg_1->h / 2 - FLOOR_OFFSET,
+			    sprites->bg_1->w,
+			    sprites->bg_1->h,
+			    false,
+			    game->camera_x_offset,
+			    game->camera_y_offset,
+			    game->camera_angle
+			    );
 
   game_draw_sprite_or_reset(context,
-    sprites->bg_2,
-    game->level == 2,
-    sprites->bg_2->w / 2,
-    sprites->bg_2->h / 2 - FLOOR_OFFSET,
-    sprites->bg_2->w,
-    sprites->bg_2->h,
-    false);
+			    sprites->bg_2,
+			    game->level == 2,
+			    sprites->bg_2->w / 2,
+			    sprites->bg_2->h / 2 - FLOOR_OFFSET,
+			    sprites->bg_2->w,
+			    sprites->bg_2->h,
+			    false,
+			    game->camera_x_offset,
+			    game->camera_y_offset,
+			    game->camera_angle
+			    );
 }
 
 void draw_level_fg(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   game_draw_sprite_or_reset(context,
-    sprites->bg_2_foreground,
-    game->level == 2,
-    sprites->bg_2_foreground->w / 2,
-    sprites->bg_2_foreground->h / 2 - FLOOR_OFFSET,
-    sprites->bg_2_foreground->w,
-    sprites->bg_2_foreground->h,
-    false);
+			    sprites->bg_2_foreground,
+			    game->level == 2,
+			    sprites->bg_2_foreground->w / 2,
+			    sprites->bg_2_foreground->h / 2 - FLOOR_OFFSET,
+			    sprites->bg_2_foreground->w,
+			    sprites->bg_2_foreground->h,
+			    false,
+			    game->camera_x_offset,
+			    game->camera_y_offset,
+			    game->camera_angle
+			    );
 }
 
 void draw_player(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
@@ -43,129 +55,177 @@ void draw_player(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   //reset the charging animation if it's a game over
   if (game->game_over) {
     game_draw_sprite_or_reset(context,
-      sprites->player_charge,
-      false,
-      game->player_x,
-      game->player_y,
-      sprites->player_charge->w,
-      sprites->player_charge->h,
-      game->player_facing);
+			      sprites->player_charge,
+			      false,
+			      game->player_x,
+			      game->player_y,
+			      sprites->player_charge->w,
+			      sprites->player_charge->h,
+			      game->player_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
 
     game_draw_sprite_or_reset(context,
-      sprites->player_attack,
-      false,
-      game->player_x,
-      game->player_y,
-      sprites->player_attack->w,
-      sprites->player_attack->h,
-      game->player_facing);
+			      sprites->player_attack,
+			      false,
+			      game->player_x,
+			      game->player_y,
+			      sprites->player_attack->w,
+			      sprites->player_attack->h,
+			      game->player_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 
   if (!game->is_player_charging) {
     game_draw_sprite_or_reset(context,
-      sprites->player_charge,
-      false,
-      game->player_x,
-      game->player_y,
-      sprites->player_charge->w,
-      sprites->player_charge->h,
-      game->player_facing);
+			      sprites->player_charge,
+			      false,
+			      game->player_x,
+			      game->player_y,
+			      sprites->player_charge->w,
+			      sprites->player_charge->h,
+			      game->player_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 
   if (game->is_player_blocking) {
     game_draw_sprite_or_reset(context,
-      sprites->player_block,
-      true,
-      game->player_x,
-      game->player_y,
-      sprites->player_block->w,
-      sprites->player_block->h,
-      game->player_facing);
+			      sprites->player_block,
+			      true,
+			      game->player_x,
+			      game->player_y,
+			      sprites->player_block->w,
+			      sprites->player_block->h,
+			      game->player_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
   else if (game->is_player_charging && !game->is_player_attacking) {
     game_draw_sprite_or_reset(context,
-      sprites->player_charge,
-      true,
-      game->player_x,
-      game->player_y,
-      sprites->player_charge->w,
-      sprites->player_charge->h,
-      game->player_facing);
+			      sprites->player_charge,
+			      true,
+			      game->player_x,
+			      game->player_y,
+			      sprites->player_charge->w,
+			      sprites->player_charge->h,
+			      game->player_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
   else if (game->is_player_attacking) {
     game_draw_sprite_or_reset(context,
-      sprites->player_attack,
-      true,
-      game->player_x,
-      game->player_y,
-      sprites->player_attack->w,
-      sprites->player_attack->h,
-      game->player_facing);
+			      sprites->player_attack,
+			      true,
+			      game->player_x,
+			      game->player_y,
+			      sprites->player_attack->w,
+			      sprites->player_attack->h,
+			      game->player_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
   else if (game->player_y > SPRITE_SIZE / 2)
-  {
-    game_draw_sprite_or_reset(context,
-      sprites->player_jump,
-      true,
-      game->player_x,
-      game->player_y,
-      sprites->player_jump->w,
-      sprites->player_jump->h,
-      game->player_facing);
-  }
+    {
+      game_draw_sprite_or_reset(context,
+				sprites->player_jump,
+				true,
+				game->player_x,
+				game->player_y,
+				sprites->player_jump->w,
+				sprites->player_jump->h,
+				game->player_facing,
+				game->camera_x_offset,
+				game->camera_y_offset,
+				game->camera_angle
+				);
+    }
   else if (abs(game->horizontal_velocity) > 0)
-  {
-    game_draw_sprite_or_reset(context,
-      sprites->player_walk,
-      true,
-      game->player_x,
-      game->player_y,
-      sprites->player_walk->w,
-      sprites->player_walk->h,
-      game->player_facing);
-  }
+    {
+      game_draw_sprite_or_reset(context,
+				sprites->player_walk,
+				true,
+				game->player_x,
+				game->player_y,
+				sprites->player_walk->w,
+				sprites->player_walk->h,
+				game->player_facing,
+				game->camera_x_offset,
+				game->camera_y_offset,
+				game->camera_angle
+				);
+    }
   else
-  {
-    game_draw_sprite_or_reset(context,
-      sprites->player_idle,
-      true,
-      game->player_x,
-      game->player_y,
-      sprites->player_idle->w,
-      sprites->player_idle->h,
-      game->player_facing);
-  }
+    {
+      game_draw_sprite_or_reset(context,
+				sprites->player_idle,
+				true,
+				game->player_x,
+				game->player_y,
+				sprites->player_idle->w,
+				sprites->player_idle->h,
+				game->player_facing,
+				game->camera_x_offset,
+				game->camera_y_offset,
+				game->camera_angle
+				);
+    }
 }
 
 void draw_boss(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   game_draw_sprite_or_reset(context,
-    sprites->boss_idle,
-    !game->is_boss_attacking,
-    game->boss_x,
-    game->boss_y,
-    sprites->boss_idle->w,
-    sprites->boss_idle->h,
-    game->boss_facing);
+			    sprites->boss_idle,
+			    !game->is_boss_attacking,
+			    game->boss_x,
+			    game->boss_y,
+			    sprites->boss_idle->w,
+			    sprites->boss_idle->h,
+			    game->boss_facing,
+			    game->camera_x_offset,
+			    game->camera_y_offset,
+			    game->camera_angle
+			    );
 
   game_draw_sprite_or_reset(context,
-    sprites->boss_attack,
-    game->is_boss_attacking,
-    game->boss_x,
-    game->boss_y,
-    sprites->boss_attack->w,
-    sprites->boss_attack->h,
-    game->boss_facing);
+			    sprites->boss_attack,
+			    game->is_boss_attacking,
+			    game->boss_x,
+			    game->boss_y,
+			    sprites->boss_attack->w,
+			    sprites->boss_attack->h,
+			    game->boss_facing,
+			    game->camera_x_offset,
+			    game->camera_y_offset,
+			    game->camera_angle
+			    );
 
   for (int i = 0; i < game->boss_projectile_count; i++) {
     game_draw_sprite_or_reset(context,
-      sprites->boss_projectile,
-      !game->boss_projectiles[i]->unused,
-      game->boss_projectiles[i]->x,
-      game->boss_projectiles[i]->y,
-      sprites->boss_projectile->w,
-      sprites->boss_projectile->h,
-      game->boss_facing);
+			      sprites->boss_projectile,
+			      !game->boss_projectiles[i]->unused,
+			      game->boss_projectiles[i]->x,
+			      game->boss_projectiles[i]->y,
+			      sprites->boss_projectile->w,
+			      sprites->boss_projectile->h,
+			      game->boss_facing,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 }
 
@@ -178,7 +238,10 @@ void game_draw_sprite_or_reset(SDL_Context *context,
 			       int y,
 			       int w,
 			       int h,
-			       int facing)
+			       int facing,
+			       double camera_x_offset,
+			       double camera_y_offset,
+			       double camera_angle)
 {
   if (draw_if) {
     render_texture(context->renderer,
@@ -186,8 +249,10 @@ void game_draw_sprite_or_reset(SDL_Context *context,
 		   location_in_camera(x, y),
 		   w,
 		   h,
-		   0,
-		   facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
+		   camera_angle,
+		   facing == -1 ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE,
+		   camera_x_offset,
+		   camera_y_offset);
     game_increment_sprite(sprite);
   } else { game_reset_sprite(sprite); }
 }
@@ -196,6 +261,7 @@ void draw_flash(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   // copy pasta!!!!
   if (game->frame_count >= 7.1 * 60 && game->frame_count <= 7.2 * 60) {
+    game->camera_trauma = 0.4;
     game_draw_sprite_or_reset(context,
 			      sprites->flash,
 			      true,
@@ -203,11 +269,16 @@ void draw_flash(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
 			      sprites->bg_1->w,
 			      sprites->bg_1->h,
-			      false);
+			      false,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 
   // copy pasta!!!!
   if (game->frame_count >= 11.7 * 60 && game->frame_count <= 11.9 * 60) {
+    game->camera_trauma = 0.4;
     game_draw_sprite_or_reset(context,
 			      sprites->flash,
 			      true,
@@ -215,11 +286,16 @@ void draw_flash(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
 			      sprites->bg_1->w,
 			      sprites->bg_1->h,
-			      false);
+			      false,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 
   // copy pasta!!!!
   if (game->frame_count >= 14.7 * 60 && game->frame_count <= 14.9 * 60) {
+    game->camera_trauma = 0.4;
     game_draw_sprite_or_reset(context,
 			      sprites->flash,
 			      true,
@@ -227,20 +303,28 @@ void draw_flash(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
 			      sprites->bg_1->w,
 			      sprites->bg_1->h,
-			      false);
+			      false,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 }
 
 void draw_player_statue(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
-    game_draw_sprite_or_reset(context,
-      sprites->player_stone,
-      true,
-      384 / 2,
-      0,
-      sprites->player_stone->w,
-      sprites->player_stone->h,
-      1);
+  game_draw_sprite_or_reset(context,
+			    sprites->player_stone,
+			    true,
+			    384 / 2,
+			    0,
+			    sprites->player_stone->w,
+			    sprites->player_stone->h,
+			    1,
+			    game->camera_x_offset,
+			    game->camera_y_offset,
+			    game->camera_angle
+			    );
 }
 
 void draw_intro_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
@@ -272,7 +356,11 @@ void draw_you_win_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *ga
 			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
 			      sprites->bg_1->w,
 			      sprites->bg_1->h,
-			      false);
+			      false,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   } else {
     game_draw_sprite_or_reset(context,
 			      sprites->win_bg_1,
@@ -281,7 +369,11 @@ void draw_you_win_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *ga
 			      sprites->win_bg_1->h / 2 - FLOOR_OFFSET,
 			      sprites->win_bg_1->w,
 			      sprites->win_bg_1->h,
-			      false);
+			      false,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
   }
 
 }

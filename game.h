@@ -98,6 +98,10 @@ typedef struct {
   int max_blocked_hits;
   int current_blocked_hits;
   int boss_metadata[100];
+  double camera_trauma;
+  double camera_x_offset;
+  double camera_y_offset;
+  double camera_angle;
 
   int scene;
 } BSJ_Game;
