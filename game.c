@@ -51,6 +51,8 @@ BSJ_Projectile * game_is_player_hit_by_projectile(BSJ_Game *game)
 
 bool game_is_player_hit(BSJ_Game *game)
 {
+  if (game->is_player_attacking) return false;
+
   return game_is_player_hit_by_boss(game) || game_is_player_hit_by_projectile(game) != NULL;
 }
 
@@ -301,6 +303,22 @@ void game_player_clear_block(BSJ_Game *game)
   game->current_blocked_hits = 0;
 }
 
+void game_reset(BSJ_Game *game) {
+  game->player_x = 0;
+  game->camera_trauma = 0;
+  game->player_y = 200;
+  game_player_clear_charge(game);
+  game->jump_hold_frames = 0;
+  game->is_player_blocking = false;
+  game->max_blocked_hits = 3;
+  game->current_blocked_hits = 0;
+  game->camera_trauma = 0;
+  game->camera_x_offset = 0;
+  game->camera_y_offset = 0;
+  game->camera_angle = 0;
+  game_reset_boss(game);
+}
+
 void game_tick_buttons(BSJ_Game *game)
 {
   if (game->scene == S_BOSS_1) {
@@ -319,23 +337,19 @@ void game_tick_buttons(BSJ_Game *game)
     } else {
       game_player_clear_block(game);
     }
-  }
-}
+  } else if (game->scene == S_WIN) {
+    if (game->frame_count > 180) {
+      if(game->buttons[B_ATTACK] == BS_PRESS || game->buttons[B_JUMP] == BS_PRESS) {
+	music_stop();
+	sound_stop();
+	game_reset(game);
+	game->scene = S_INTRO;
+	game->frame_count = 0;
+	music_play(game->sounds->music_justice_lite_3_cracks);
 
-void game_reset(BSJ_Game *game) {
-  game->player_x = 0;
-  game->camera_trauma = 0;
-  game->player_y = 200;
-  game_player_clear_charge(game);
-  game->jump_hold_frames = 0;
-  game->is_player_blocking = false;
-  game->max_blocked_hits = 3;
-  game->current_blocked_hits = 0;
-  game->camera_trauma = 0;
-  game->camera_x_offset = 0;
-  game->camera_y_offset = 0;
-  game->camera_angle = 0;
-  game_reset_boss(game);
+      }
+    }
+  }
 }
 
 void game_process_blocks(BSJ_Game *game)
@@ -440,12 +454,13 @@ void game_tick_scene_boss(BSJ_Game *game)
 
   if(game_is_boss_hit(game)) {
     game->scene = S_WIN;
+    game->is_player_attacking = false;
+    game_player_clear_charge(game);
     music_stop();
     sound_stop();
     game->frame_count = 0;
   }
 
-  game_tick_buttons(game);
   game_tick_attack(game);
   game_tick_edge_collision(game);
   game_tick_horizontal_velocity(game);
@@ -476,8 +491,10 @@ void game_tick(BSJ_Game *game)
   game_tick_scene_intro(game);
   game_tick_scene_boss(game);
   game_tick_scene_win(game);
+  game_tick_buttons(game);
 }
 
-void game_clean_up(BSJ_Game *game) {
+void game_clean_up(BSJ_Game *game)
+{
   sound_clean_up(game->sounds);
 }

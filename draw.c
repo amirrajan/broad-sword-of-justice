@@ -329,7 +329,20 @@ void draw_player_statue(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *ga
 
 void draw_intro_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
-  if (game->scene != S_INTRO) { return; }
+  if (game->scene != S_INTRO) {
+    game_draw_sprite_or_reset(context,
+			      sprites->player_stone,
+			      false,
+			      384 / 2,
+			      0,
+			      sprites->player_stone->w,
+			      sprites->player_stone->h,
+			      1,
+			      game->camera_x_offset,
+			      game->camera_y_offset,
+			      game->camera_angle
+			      );
+  }
 
   draw_player_statue(context, sprites, game);
   draw_flash(context, sprites, game);
@@ -339,8 +352,8 @@ void draw_boss_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   if (game->scene != S_BOSS_1) { return; }
 
   draw_level_bg(context, sprites, game);
-  draw_player(context, sprites, game);
   draw_boss(context, sprites, game);
+  draw_player(context, sprites, game);
   draw_level_fg(context, sprites, game);
 }
 
