@@ -116,8 +116,29 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 
   sprites->player_stone =
     game_new_sprite(context, 128, 128,
-		    2,
-		    "images/player_stone.png",   16 * 60 + 10,
+		    23,
+		    "images/player_stone.png",   7 * 60 + 10,
+                    "images/player_stone1.png",   18,
+                "images/player_stone.png",   4 * 60 + 10,
+                "images/player_stone1.png",   18,
+                    "images/player_stone.png",   2 * 60 + 10,
+                    "images/player_stone1.png",   8,
+                    "images/player_stone.png",   8,
+                    "images/player_stone1.png",   8,
+                    "images/player_stone.png",   8,
+                    "images/player_stone1.png",   4,
+                    "images/player_stone.png",   4,
+                    "images/player_stone1.png",   4,
+                    "images/player_stone.png",   2,
+                    "images/player_stone1.png",   2,
+                    "images/player_stone.png",   2,
+                    "images/player_stone1.png",   2,
+                    "images/player_stone.png",   16,
+                    "images/player_stone2.png",   2,
+                    "images/player_stone3.png",   2,
+                    "images/player_stone4.png",   2,
+                    "images/player_stone5.png",   2,
+                    "images/player_stone6.png",   2,
 		    "images/player_charge1.png", 8  * 60);
 
   sprites->player_charge =
