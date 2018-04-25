@@ -170,6 +170,12 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
                     "images/bullet.png", 1
                     );
 
+    sprites->win_bg_1 =
+    game_new_sprite(context, 384, 220,
+                    1,
+                    "images/win1.png", 1
+                    );
+    
   sprites->bg_1 =
     game_new_sprite(context, 384, 220,
       1,
