@@ -9,6 +9,7 @@ typedef struct BSJ_Sounds {
   Mix_Music * music_boss_alley;
   Mix_Music * music_boss_docks;
   Mix_Music * music_justice;
+  Mix_Music * music_justice_lite_3_cracks;
   Mix_Music * music_justice_lite;
   Mix_Music * music_justice_loop;
   Mix_Chunk * sound_justice_death;

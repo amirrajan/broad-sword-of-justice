@@ -46,12 +46,18 @@ typedef struct {
   bool unused;
 } BSJ_Projectile;
 
+typedef enum {
+  S_INTRO,
+  S_BOSS_1,
+} BSJ_Scene;
+
 // Headless representation of the game.
 typedef struct {
   BSJ_Sounds *sounds;
-  
+
   double timestep;
   int level;
+  int frame_count;
 
   double floor;
 
@@ -89,6 +95,8 @@ typedef struct {
   int max_blocked_hits;
   int current_blocked_hits;
   int boss_metadata[100];
+
+  int scene;
 } BSJ_Game;
 
 // Headless representation of a point.

@@ -98,8 +98,8 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 
   sprites->player_jump =
     game_new_sprite(context, 128, 128,
-      1,                    
-      "images/player_jump.png", 1  
+      1,
+      "images/player_jump.png", 1
     );
 
   // the frame durations are closely tied to:
@@ -114,9 +114,15 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 			"images/player_attack4.png", 51
 			);
 
+  sprites->player_stone =
+    game_new_sprite(context, 128, 128,
+		    2,
+		    "images/player_stone.png",   16 * 60 + 10,
+		    "images/player_charge1.png", 8  * 60);
+
   sprites->player_charge =
     game_new_sprite(context, 128, 128,
-			15,                        
+			15,
 		  "images/player_charge0.png", 20,
       "images/player_charge1.png", 20,
       "images/player_charge2.png", 20,
@@ -136,13 +142,13 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
 
   sprites->player_dash =
     game_new_sprite(context, 128, 128,
-      1,                        
-      "images/player_dash.png", 1   
+      1,
+      "images/player_dash.png", 1
     );
 
   sprites->player_block =
     game_new_sprite(context, 128, 128,
-			1,                        
+			1,
 		  "images/player_block.png", 1
 			);
 
@@ -157,14 +163,14 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
             1,
             "images/knife.png", 1
             );
-    
-    sprites->boss_idle2 =
+
+    sprites->boss_idle =
     game_new_sprite(context, 128, 128,
                     1,
                     "images/enemy5_idle.png", 1
                     );
-    
-    sprites->boss_projectile2 =
+
+    sprites->boss_projectile =
     game_new_sprite(context, 14, 3,
                     1,
                     "images/bullet.png", 1
@@ -175,7 +181,12 @@ BSJ_Sprites * game_init_sprites(SDL_Context * context)
                     1,
                     "images/win1.png", 1
                     );
-    
+  sprites->flash =
+    game_new_sprite(context, 384, 220,
+      1,
+      "images/flash.png", 1
+    );
+
   sprites->bg_1 =
     game_new_sprite(context, 384, 220,
       1,

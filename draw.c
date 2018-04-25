@@ -151,6 +151,74 @@ void game_draw_sprite_or_reset(SDL_Context *context,
   } else { game_reset_sprite(sprite); }
 }
 
+void draw_flash(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
+{
+  // copy pasta!!!!
+  if (game->frame_count >= 7.1 * 60 && game->frame_count <= 7.2 * 60) {
+    game_draw_sprite_or_reset(context,
+			      sprites->flash,
+			      true,
+			      sprites->bg_1->w / 2,
+			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
+			      sprites->bg_1->w,
+			      sprites->bg_1->h,
+			      false);
+  }
+
+  // copy pasta!!!!
+  if (game->frame_count >= 11.7 * 60 && game->frame_count <= 11.9 * 60) {
+    game_draw_sprite_or_reset(context,
+			      sprites->flash,
+			      true,
+			      sprites->bg_1->w / 2,
+			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
+			      sprites->bg_1->w,
+			      sprites->bg_1->h,
+			      false);
+  }
+
+  // copy pasta!!!!
+  if (game->frame_count >= 14.7 * 60 && game->frame_count <= 14.9 * 60) {
+    game_draw_sprite_or_reset(context,
+			      sprites->flash,
+			      true,
+			      sprites->bg_1->w / 2,
+			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
+			      sprites->bg_1->w,
+			      sprites->bg_1->h,
+			      false);
+  }
+}
+
+void draw_player_statue(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
+{
+    game_draw_sprite_or_reset(context,
+      sprites->player_stone,
+      true,
+      384 / 2,
+      0,
+      sprites->player_stone->w,
+      sprites->player_stone->h,
+      1);
+}
+
+void draw_intro_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
+{
+  if (game->scene != S_INTRO) { return; }
+
+  draw_player_statue(context, sprites, game);
+  draw_flash(context, sprites, game);
+}
+
+void draw_boss_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game) {
+  if (game->scene != S_BOSS_1) { return; }
+
+  draw_level_bg(context, sprites, game);
+  draw_player(context, sprites, game);
+  draw_boss(context, sprites, game);
+  draw_level_fg(context, sprites, game);
+}
+
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
@@ -158,10 +226,8 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   SDL_SetRenderTarget(context->renderer, context->resizeTarget);
   SDL_RenderClear(context->renderer);
 
-  draw_level_bg(context, sprites, game);
-  draw_player(context, sprites, game);
-  draw_boss(context, sprites, game);
-  draw_level_fg(context, sprites, game);
+  draw_intro_scene(context, sprites, game);
+  draw_boss_scene(context, sprites, game);
 
   // reset the render target and draw the texture at scale
   SDL_SetRenderTarget(context->renderer, NULL);

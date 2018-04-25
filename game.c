@@ -79,10 +79,14 @@ int game_new(BSJ_Game *game) {
   game->sounds = MALLOCA(BSJ_Sounds);
   if (sound_init(game->sounds) != 0)
     return 1;
-  music_play(game->sounds->music_boss_alley);
+
+  music_play(game->sounds->music_justice_lite_3_cracks);
 
   // what level we are on (zero is menu)
   game->level = 1;
+
+  // this is a frame count, it will be reset on the change of a scene
+  game->frame_count = 0;
 
   // frames per second.
   game->timestep = 1000. / 60.;
@@ -137,10 +141,12 @@ int game_new(BSJ_Game *game) {
   game->is_player_blocking = false;
   game->max_blocked_hits = 3;
   game->current_blocked_hits = 0;
+  game->scene = S_INTRO;
 
   game_init_boss(game);
 
-  return 0;  
+
+  return 0;
 }
 
 bool game_can_player_move(BSJ_Game *game)
@@ -319,9 +325,24 @@ void game_tick_vertical_velocity(BSJ_Game *game)
   }
 }
 
-// This will contain code to control the game.
-void game_tick(BSJ_Game *game)
+void game_tick_scene_intro(BSJ_Game *game)
 {
+  if (game->scene != S_INTRO) { return; }
+
+  // justice_lite_3_cracks lasts for 21 seconds, the scene should change to the boss
+  // after this cutscene
+  if (game->frame_count >= 60 * 21) {
+    music_stop();
+    music_play(game->sounds->music_boss_alley);
+    sound_play(game->sounds->sound_kill_this_fool);
+    game->scene = S_BOSS_1;
+  }
+}
+
+void game_tick_scene_boss(BSJ_Game *game)
+{
+  if (game->scene != S_BOSS_1) { return; }
+
   game_process_blocks(game);
 
   if(game_is_player_hit(game)) {
@@ -339,6 +360,14 @@ void game_tick(BSJ_Game *game)
   game_tick_horizontal_velocity(game);
   game_tick_vertical_velocity(game);
   game_tick_boss(game);
+}
+
+// This will contain code to control the game.
+void game_tick(BSJ_Game *game)
+{
+  game->frame_count += 1;
+  game_tick_scene_intro(game);
+  game_tick_scene_boss(game);
 }
 
 void game_clean_up(BSJ_Game *game) {
