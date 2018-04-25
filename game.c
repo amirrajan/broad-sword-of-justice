@@ -23,8 +23,8 @@ bool game_is_player_hit_by_boss(BSJ_Game *game)
   cpBB boss_box;
   boss_box.l = game->boss_x;
   boss_box.r = game->boss_x + SPRITE_SIZE / 2.0;
-  boss_box.t = game->boss_y;
-  boss_box.b = game->boss_y - SPRITE_SIZE;
+  boss_box.t = game->boss_y + 15;
+  boss_box.b = game->boss_y - SPRITE_SIZE - 15;
 
   return (bool)cpBBIntersects(game_player_box(game), boss_box);
 }
@@ -286,20 +286,22 @@ void game_player_clear_block(BSJ_Game *game)
 
 void game_tick_buttons(BSJ_Game *game)
 {
-  if (game->buttons[B_LEFT]) { game_move_player_left(game); }
-  if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
-  if (game->buttons[B_JUMP] == BS_PRESS) { game_player_jump(game); }
-  if (game->buttons[B_ATTACK]) {
-    game_player_attempt_charge(game);
-    game_player_attempt_attack(game);
-  } else {
-    game_player_clear_charge(game);
-  }
+  if (game->scene == S_BOSS_1) {
+    if (game->buttons[B_LEFT]) { game_move_player_left(game); }
+    if (game->buttons[B_RIGHT]) { game_move_player_right(game); }
+    if (game->buttons[B_JUMP] == BS_PRESS) { game_player_jump(game); }
+    if (game->buttons[B_ATTACK]) {
+      game_player_attempt_charge(game);
+      game_player_attempt_attack(game);
+    } else {
+      game_player_clear_charge(game);
+    }
 
-  if (game->buttons[B_BLOCK]) {
-    game_player_attempt_block(game);
-  } else {
-    game_player_clear_block(game);
+    if (game->buttons[B_BLOCK]) {
+      game_player_attempt_block(game);
+    } else {
+      game_player_clear_block(game);
+    }
   }
 }
 
@@ -376,7 +378,10 @@ void game_tick_scene_boss(BSJ_Game *game)
   }
 
   if(game_is_boss_hit(game)) {
-    game_reset(game);
+    game->scene = S_WIN;
+    music_stop();
+    sound_stop();
+    game->frame_count = 0;
   }
 
   game_tick_buttons(game);
@@ -387,12 +392,28 @@ void game_tick_scene_boss(BSJ_Game *game)
   game_tick_boss(game);
 }
 
+void game_tick_scene_win(BSJ_Game *game)
+{
+  if (game->scene != S_WIN) { return; }
+
+  if (game->frame_count == 0) {
+    sound_play(game->sounds->sound_swing);
+    sound_play(game->sounds->sound_swing);
+    sound_play(game->sounds->sound_swing);
+  }
+
+  if (game->frame_count == 120) {
+    music_play(game->sounds->music_justice_loop);
+  }
+}
+
 // This will contain code to control the game.
 void game_tick(BSJ_Game *game)
 {
   game->frame_count += 1;
   game_tick_scene_intro(game);
   game_tick_scene_boss(game);
+  game_tick_scene_win(game);
 }
 
 void game_clean_up(BSJ_Game *game) {

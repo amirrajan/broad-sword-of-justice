@@ -50,6 +50,15 @@ void draw_player(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
       sprites->player_charge->w,
       sprites->player_charge->h,
       game->player_facing);
+
+    game_draw_sprite_or_reset(context,
+      sprites->player_attack,
+      false,
+      game->player_x,
+      game->player_y,
+      sprites->player_attack->w,
+      sprites->player_attack->h,
+      game->player_facing);
   }
 
   if (!game->is_player_charging) {
@@ -251,6 +260,32 @@ void draw_boss_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   draw_level_fg(context, sprites, game);
 }
 
+void draw_you_win_scene(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game) {
+  if (game->scene != S_WIN) { return; }
+
+  // copy pasta!!!!
+  if (game->frame_count >= 0 && game->frame_count <= 2 * 60) {
+    game_draw_sprite_or_reset(context,
+			      sprites->flash,
+			      true,
+			      sprites->bg_1->w / 2,
+			      sprites->bg_1->h / 2 - FLOOR_OFFSET,
+			      sprites->bg_1->w,
+			      sprites->bg_1->h,
+			      false);
+  } else {
+    game_draw_sprite_or_reset(context,
+			      sprites->win_bg_1,
+			      true,
+			      sprites->win_bg_1->w / 2,
+			      sprites->win_bg_1->h / 2 - FLOOR_OFFSET,
+			      sprites->win_bg_1->w,
+			      sprites->win_bg_1->h,
+			      false);
+  }
+
+}
+
 // This takes a game and renders it on the screen.
 void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
@@ -260,6 +295,7 @@ void game_draw(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 
   draw_intro_scene(context, sprites, game);
   draw_boss_scene(context, sprites, game);
+  draw_you_win_scene(context, sprites, game);
 
   // reset the render target and draw the texture at scale
   SDL_SetRenderTarget(context->renderer, NULL);

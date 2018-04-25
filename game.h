@@ -49,6 +49,7 @@ typedef struct {
 typedef enum {
   S_INTRO,
   S_BOSS_1,
+  S_WIN
 } BSJ_Scene;
 
 // Headless representation of the game.
