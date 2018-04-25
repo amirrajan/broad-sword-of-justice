@@ -40,6 +40,29 @@ void draw_level_fg(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 
 void draw_player(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
+  //reset the charging animation if it's a game over
+  if (game->game_over) {
+    game_draw_sprite_or_reset(context,
+      sprites->player_charge,
+      false,
+      game->player_x,
+      game->player_y,
+      sprites->player_charge->w,
+      sprites->player_charge->h,
+      game->player_facing);
+  }
+
+  if (!game->is_player_charging) {
+    game_draw_sprite_or_reset(context,
+      sprites->player_charge,
+      false,
+      game->player_x,
+      game->player_y,
+      sprites->player_charge->w,
+      sprites->player_charge->h,
+      game->player_facing);
+  }
+
   if (game->is_player_blocking) {
     game_draw_sprite_or_reset(context,
       sprites->player_block,
@@ -105,7 +128,7 @@ void draw_player(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
   }
 }
 
-draw_boss(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
+void draw_boss(SDL_Context *context, BSJ_Sprites *sprites, BSJ_Game *game)
 {
   game_draw_sprite_or_reset(context,
     sprites->boss_idle,

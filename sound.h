@@ -13,7 +13,8 @@ typedef struct BSJ_Sounds {
   Mix_Music * music_justice_lite;
   Mix_Music * music_justice_loop;
   Mix_Chunk * sound_justice_death;
-    Mix_Chunk * sound_dodge;
+  Mix_Chunk * sound_charge;
+  Mix_Chunk * sound_dodge;
   Mix_Chunk * sound_gunshot;
   Mix_Chunk * sound_hurt0;
   Mix_Chunk * sound_hurt1;
@@ -31,5 +32,6 @@ int music_play(Mix_Music* music);
 void music_stop();
 
 int sound_play(Mix_Chunk* sound);
+void sound_stop();
 
 #endif // sound_h

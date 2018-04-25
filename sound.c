@@ -22,13 +22,13 @@ int sound_init(BSJ_Sounds *sounds) {
   BSJ_TryLoadMusic(justice_lite);
   BSJ_TryLoadMusic(justice_lite_3_cracks);
   BSJ_TryLoadMusic(justice_loop);
-
-    BSJ_TryLoadSound(justice_death);
+  BSJ_TryLoadSound(justice_death);
   BSJ_TryLoadSound(dodge);
   BSJ_TryLoadSound(gunshot);
   BSJ_TryLoadSound(hurt0);
   BSJ_TryLoadSound(hurt1);
   BSJ_TryLoadSound(jump);
+  BSJ_TryLoadSound(charge);
   BSJ_TryLoadSound(kill_this_fool);
   BSJ_TryLoadSound(swing);
 
@@ -60,14 +60,14 @@ void sound_clean_up(BSJ_Sounds *sounds) {
   Mix_FreeMusic(sounds->music_justice_lite_3_cracks);
   Mix_FreeMusic(sounds->music_justice_lite);
   Mix_FreeMusic(sounds->music_justice_loop);
-
-    Mix_FreeChunk(sounds->sound_justice_death);
+  Mix_FreeChunk(sounds->sound_justice_death);
   Mix_FreeChunk(sounds->sound_dodge);
   Mix_FreeChunk(sounds->sound_gunshot);
   Mix_FreeChunk(sounds->sound_hurt0);
   Mix_FreeChunk(sounds->sound_hurt1);
   Mix_FreeChunk(sounds->sound_jump);
   Mix_FreeChunk(sounds->sound_kill_this_fool);
+  Mix_FreeChunk(sounds->sound_charge);
   Mix_FreeChunk(sounds->sound_swing);
 
   Mix_CloseAudio();
@@ -83,6 +83,24 @@ int music_play(Mix_Music* music) {
 
 void music_stop() {
   Mix_HaltMusic();
+}
+
+void sound_stop() {
+  Mix_HaltChannel(0);
+  Mix_HaltChannel(1);
+  Mix_HaltChannel(2);
+  Mix_HaltChannel(3);
+  Mix_HaltChannel(4);
+  Mix_HaltChannel(5);
+  Mix_HaltChannel(6);
+  Mix_HaltChannel(7);
+  Mix_HaltChannel(8);
+  Mix_HaltChannel(9);
+  Mix_HaltChannel(10);
+  Mix_HaltChannel(11);
+  Mix_HaltChannel(13);
+  Mix_HaltChannel(14);
+  Mix_HaltChannel(15);
 }
 
 int sound_play(Mix_Chunk* sound) {

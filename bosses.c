@@ -80,8 +80,8 @@ void game_queue_projectile_s_dx_dy(BSJ_Game *game, int speed, double dx, double 
 
   BSJ_Projectile * projectile = game->boss_projectiles[unused_projectile_index];
   projectile->unused = false;
-  projectile->x = game->boss_x - FLOOR_OFFSET / 4;
-  projectile->y = game->boss_y;
+  projectile->x = game->boss_x - FLOOR_OFFSET / 4 - 15;
+  projectile->y = game->boss_y + 5;
   projectile->w = 7;
   projectile->h = 1;
   projectile->speed = speed; // in pixels
@@ -109,6 +109,8 @@ void game_tick_boss_mode_1(BSJ_Game *game) {
   md(current_attack_cooldown) -= 1;
 
   if (md(current_attack_cooldown) > 0) { return; }
+
+  sound_play(game->sounds->sound_gunshot);
 
   game_queue_projectile_s(game, 7);
 
@@ -171,6 +173,8 @@ void game_tick_boss_mode_2(BSJ_Game *game)
   if (md(current_attack_cooldown) > 0) { return; }
 
   if (md(current_projectiles) >= projectile_limit)  { return; }
+
+  sound_play(game->sounds->sound_gunshot);
 
   game_queue_projectile_s(game, 7);
 

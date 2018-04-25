@@ -11,8 +11,8 @@ cpBB game_player_box(BSJ_Game * game)
   cpBB player_box;
   player_box.l = game->player_x;
   player_box.r = game->player_x + SPRITE_SIZE / 2.0;
-  player_box.t = game->player_y;
-  player_box.b = game->player_y - SPRITE_SIZE / 2.0;
+  player_box.t = game->player_y + SPRITE_SIZE / 2.0;
+  player_box.b = game->player_y;
 
   return player_box;
 }
@@ -24,7 +24,7 @@ bool game_is_player_hit_by_boss(BSJ_Game *game)
   boss_box.l = game->boss_x;
   boss_box.r = game->boss_x + SPRITE_SIZE / 2.0;
   boss_box.t = game->boss_y;
-  boss_box.b = game->boss_y - SPRITE_SIZE / 2.0;
+  boss_box.b = game->boss_y - SPRITE_SIZE;
 
   return (bool)cpBBIntersects(game_player_box(game), boss_box);
 }
@@ -145,6 +145,7 @@ int game_new(BSJ_Game *game) {
 
   game_init_boss(game);
 
+  game->game_over = false;
 
   return 0;
 }
@@ -206,12 +207,18 @@ void game_player_attempt_attack(BSJ_Game *game) {
 }
 
 void game_player_clear_charge(BSJ_Game *game) {
+  if (!game->is_player_charging) { return; }
+
+  sound_stop(); //todo stop the charging sound
   game->is_player_charging = false;
   game->current_charging_frames = 0;
   game->can_player_attack = false;
 }
 
 void game_player_attempt_charge(BSJ_Game *game) {
+  if(game->is_player_charging == false) {
+    sound_play(game->sounds->sound_charge);
+  }
   game->is_player_charging = true;
   game->current_charging_frames++;
   if (game->current_charging_frames > game->max_charging_frames) {
@@ -290,6 +297,11 @@ void game_tick_buttons(BSJ_Game *game)
 void game_reset(BSJ_Game *game) {
   game->player_x = 0;
   game->player_y = 200;
+  game_player_clear_charge(game);
+  game->jump_hold_frames = 0;
+  game->is_player_blocking = false;
+  game->max_blocked_hits = 3;
+  game->current_blocked_hits = 0;
   game_reset_boss(game);
 }
 
@@ -343,11 +355,15 @@ void game_tick_scene_boss(BSJ_Game *game)
 {
   if (game->scene != S_BOSS_1) { return; }
 
+  game->game_over = false;
+
   game_process_blocks(game);
 
   if(game_is_player_hit(game)) {
-    sound_play(game->sounds->sound_hurt0);
+    sound_stop(); //todo stop the charging sound
     game_reset(game);
+    sound_play(game->sounds->sound_justice_death);
+    game->game_over = true;
   }
 
   if(game_is_boss_hit(game)) {
