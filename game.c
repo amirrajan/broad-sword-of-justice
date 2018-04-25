@@ -354,8 +354,10 @@ void game_tick_buttons(BSJ_Game *game)
 
 void game_process_blocks(BSJ_Game *game)
 {
-  if (!game->is_player_blocking) return;
-  if (game->current_blocked_hits >= game->max_blocked_hits) return;
+  if (!game->is_player_attacking) {
+    if (!game->is_player_blocking) return;
+    if (game->current_blocked_hits >= game->max_blocked_hits) return;
+  }
 
   BSJ_Projectile * projectile = game_is_player_hit_by_projectile(game);
 
@@ -455,10 +457,14 @@ void game_tick_scene_boss(BSJ_Game *game)
   if(game_is_boss_hit(game)) {
     game->scene = S_WIN;
     game->is_player_attacking = false;
-    game_player_clear_charge(game);
     music_stop();
     sound_stop();
+    game_player_clear_charge(game);
     game->frame_count = 0;
+    game->camera_trauma = 0;
+    game->camera_x_offset = 0;
+    game->camera_y_offset = 0;
+    game->camera_y_offset = 0;
   }
 
   game_tick_attack(game);
