@@ -85,7 +85,6 @@ int game_new(BSJ_Game *game) {
 
   music_play(game->sounds->music_justice_lite_3_cracks);
 
-  // what level we are on (zero is menu)
   game->level = 1;
 
   // this is a frame count, it will be reset on the change of a scene
@@ -433,7 +432,10 @@ void game_tick_scene_intro(BSJ_Game *game)
   // after this cutscene
   if (game->frame_count >= 60 * 21) {
     music_stop();
-    music_play(game->sounds->music_boss_alley);
+    if (game->level == 1)
+      music_play(game->sounds->music_boss_alley);
+    else if (game->level == 2)
+      music_play(game->sounds->music_boss_docks);
     sound_play(game->sounds->sound_kill_this_fool);
     game->scene = S_BOSS_1;
   }
@@ -465,6 +467,11 @@ void game_tick_scene_boss(BSJ_Game *game)
     game->camera_x_offset = 0;
     game->camera_y_offset = 0;
     game->camera_y_offset = 0;
+
+    if (game->level == 1)
+      game->level = 2;
+    else
+      game->level = 1;
   }
 
   game_tick_attack(game);

@@ -11,7 +11,7 @@ SDL_Context * game_new_sdl_context()
   o->window = SDL_CreateWindow("Broadsword of Justice",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
     GAME_WIDTH * 2, GAME_HEIGHT * 2,
-    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE); //| SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN_DESKTOP);
 
   o->renderer = SDL_CreateRenderer(o->window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   o->resizeTarget = SDL_CreateTexture(o->renderer, SDL_PIXELFORMAT_RGBA8888,
